@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>gosu - 곡 선택</title>
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="lobby/chat.css">
+    <link rel="stylesheet" href="lobby/lobby.css">
+</head>
+<body>
+    <main id="app">
+        <section id="title" aria-label="타이틀">
+            <!-- App icon candidate 23: puppy, four argon notes and judgement line. -->
+            <div id="title-logo"><svg aria-hidden="true" viewBox="0 0 400 400"><circle cx="200" cy="200" r="190" fill="#ffffff"/><circle cx="200" cy="200" r="168" fill="#00add8"/><rect x="84" y="176" width="54" height="30" rx="5" fill="#ffc528"/><rect x="84" y="199" width="54" height="7" rx="3.5" fill="#ffffff"/><path d="M103 185 L111 191 L119 185" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="144" y="132" width="54" height="30" rx="5" fill="#fc6d01"/><rect x="144" y="155" width="54" height="7" rx="3.5" fill="#ffffff"/><path d="M163 141 L171 147 L179 141" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="202" y="92" width="54" height="30" rx="5" fill="#d5235a"/><rect x="202" y="115" width="54" height="7" rx="3.5" fill="#ffffff"/><path d="M221 101 L229 107 L237 101" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="262" y="144" width="54" height="30" rx="5" fill="#cb3cec"/><rect x="262" y="167" width="54" height="7" rx="3.5" fill="#ffffff"/><path d="M281 153 L289 159 L297 153" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><clipPath id="peek23"><rect x="0" y="0" width="400" height="286"/></clipPath><g clip-path="url(#peek23)"><ellipse cx="200" cy="300" rx="104" ry="92" fill="#ffffff"/><ellipse cx="112" cy="262" rx="30" ry="58" transform="rotate(26 112 262)" fill="#0d0d0e"/><ellipse cx="288" cy="262" rx="30" ry="58" transform="rotate(-26 288 262)" fill="#0d0d0e"/><circle cx="166" cy="262" r="12" fill="#0d0d0e"/><circle cx="234" cy="262" r="12" fill="#0d0d0e"/><circle cx="169" cy="256" r="4" fill="#ffffff"/><circle cx="237" cy="256" r="4" fill="#ffffff"/></g><rect x="56" y="282" width="288" height="14" rx="7" fill="#ffffff"/><circle id="title-flash" cx="200" cy="200" r="190" fill="#ffffff"/></svg></div>
+            <h1 id="title-name">gosu</h1>
+            <nav id="title-menu" aria-label="메뉴">
+                <button id="title-single" type="button">싱글 플레이</button>
+                <button id="title-multi" type="button">멀티 플레이</button>
+                <button id="title-medley" type="button">메들리 모드</button>
+                <button id="title-edit" type="button">채보 편집</button>
+                <button id="title-options" type="button">환경 설정</button>
+                <button id="title-quit" type="button">종료</button>
+            </nav>
+            <button id="title-web" type="button" aria-label="gosu 웹사이트 열기">
+                <span class="title-brand" aria-hidden="true">gosu</span>
+                <span class="title-site"><b>gosu powered</b><span id="title-address"></span></span>
+            </button>
+            <!-- Quaver's FooterJukebox: artist - title over a thin progress bar at the bottom of the main menu. -->
+            <div id="title-player" hidden>
+                <p id="title-song"></p>
+                <p id="title-time"></p>
+                <div id="title-progress"><span></span></div>
+            </div>
+        </section>
+        <dialog id="quit-dialog" aria-labelledby="quit-heading">
+            <form method="dialog">
+                <h2 id="quit-heading">게임을 종료할까요?</h2>
+                <button value="quit">종료</button> <button value="cancel" autofocus>취소 [Esc]</button>
+            </form>
+        </dialog>
+        <!-- The selected chart's background stays from song select through play to the result. -->
+        <div id="backdrop"><img id="bg-old" alt="" hidden><img id="bg" alt="" hidden></div>
+        <!-- osu!lazer PlayerLoader: the chosen chart while the game window loads. -->
+        <div id="loader" role="status" hidden><b id="loader-title"></b><span id="loader-artist"></span><span id="loader-chart"></span></div>
+        <section id="playing-status" hidden aria-live="polite"><h2 id="playing-label">게임 창에서 플레이 중</h2><p id="playing-chart"></p><p>게임 창에서 종료하면 이 화면으로 돌아옵니다.</p><button id="playing-hud" type="button">HUD 설정</button></section>
+        <section id="medley" aria-labelledby="medley-heading" hidden>
+            <section id="medley-detail" aria-label="메들리 구성">
+            <h2 id="medley-heading">메들리 모드</h2>
+            <h3 id="medley-picked">선택한 곡 · 0 / 3</h3>
+            <ol id="medley-songs" aria-labelledby="medley-picked"></ol>
+            <p class="medley-help">클릭·Space로 담기·빼기 · 최대 3곡</p>
+            <p class="medley-help">같은 곡의 난이도는 교체됩니다. 재생 순서는 자동으로 구성됩니다.</p>
+            <p id="medley-keys"></p>
+            <p><label>Lv <input id="medley-low" type="number" min="0" max="99" step="0.5" value="1"></label> ~ <input id="medley-high" type="number" min="0" max="99" step="0.5" value="99" aria-label="최대 Lv"></p>
+            </section>
+            <header id="medley-top"><label for="medley-search">검색</label> <input id="medley-search" type="search" autocomplete="off" placeholder="제목·아티스트·난이도"></header>
+            <section id="medley-list" aria-label="곡 목록">
+                <div id="medley-list-head"><p id="medley-count"></p><p id="medley-pages"><button id="medley-prev" type="button">이전</button> <span id="medley-page"></span> <button id="medley-next" type="button">다음</button></p></div>
+                <ul id="medley-candidates" class="song-catalog" role="listbox" aria-multiselectable="true" aria-label="메들리에 담을 채보"></ul>
+            </section>
+            <footer id="medley-commands">
+                <nav class="hints" aria-label="메들리 조작">
+                    <button id="medley-play" type="button"><span>플레이</span><kbd>Enter</kbd></button>
+                    <button id="medley-auto" type="button"><span>Auto</span><kbd>Ctrl+Enter</kbd></button>
+                    <button id="medley-draw" type="button"><span>랜덤 뽑기</span><kbd>F2</kbd></button>
+                    <button id="medley-clear" type="button"><span>선택 비우기</span><kbd>Ctrl+Backspace</kbd></button>
+                </nav>
+                <p id="medley-status" role="status"></p>
+                <nav class="hints"><button id="medley-back" type="button"><span>뒤로</span><kbd>Esc</kbd></button></nav>
+            </footer>
+        </section>
+        <section id="songselect" aria-label="곡 선택" hidden>
+        <header id="top">
+            <p>
+                <label for="search-text">검색</label> <input id="search-text" type="search" autocomplete="off" size="36">
+                <button id="downloads-open" type="button">곡 받기 [F9]</button>
+            </p>
+        </header>
+        <dialog id="downloads" aria-labelledby="downloads-heading">
+            <header><h2 id="downloads-heading">곡 받기</h2><button id="download-close" type="button">닫기 [Esc]</button></header>
+            <form id="download-form">
+                <label>검색원 <select id="download-catalog"><option value="osu">osu!mania</option><option value="archive">채보 아카이브</option></select></label>
+                <label>검색 <input id="download-query" type="search" maxlength="256" autocomplete="off" placeholder="제목·아티스트·제작자"></label>
+                <label>키 수 <select id="download-keys"><option value="0">전체</option><option value="4">4K</option><option value="7">7K</option><option value="1">1K</option><option value="2">2K</option><option value="3">3K</option><option value="5">5K</option><option value="6">6K</option><option value="8">8K</option><option value="9">9K</option><option value="10">10K</option><option value="12">12K</option><option value="14">14K</option><option value="16">16K</option><option value="18">18K</option></select></label>
+                <button id="download-search" type="submit">검색</button>
+            </form>
+            <p id="download-archive-row" hidden><label>아카이브 서버 <input id="download-server" type="url" placeholder="http://127.0.0.1:8091"></label> <button id="download-save-server" type="button">저장</button></p>
+            <p id="download-limit" hidden>설치는 데스크톱 앱 또는 localhost 웹 서버에서 사용할 수 있습니다.</p>
+            <p id="download-summary"></p><ol id="download-list" aria-label="다운로드 검색 결과"></ol>
+            <footer><button id="download-prev" type="button" disabled>이전</button><button id="download-next" type="button" disabled>다음</button><button id="download-cancel" type="button" hidden>설치 취소</button></footer>
+            <progress id="download-progress" hidden></progress><p id="download-transfer" aria-live="polite"></p><p id="download-status" role="status" aria-live="polite"></p>
+        </dialog>
+        <div id="panes">
+            <section id="detail" aria-labelledby="selected-heading">
+                <form id="selection">
+                    <div id="hero">
+                        <img id="song-cover" alt="" hidden>
+                        <div id="hero-text">
+                            <p id="chart-line"><span id="hero-level" title="채보에 기재된 레벨"><span>Lv</span> <b id="level">-</b></span> <span id="source-level" class="source-level" hidden></span> <span id="difficulty">-</span></p>
+                            <h2 id="selected-heading" aria-describedby="difficulty"><span id="song-name">-</span></h2>
+                            <p id="song-duration" hidden aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div id="density-overview"><div id="info-density" role="img"></div></div>
+                    <p id="best"></p>
+                    <p id="preview-status" role="status" hidden></p>
+                </form>
+                <section id="history-box" aria-labelledby="history-heading">
+                    <h3 id="history-heading">랭킹</h3>
+                    <!-- osu!lazer leaderboard scope: which ranking the list shows; only the local one can be reordered. -->
+                    <div id="history-controls">
+                        <div id="history-scope" role="group" aria-label="랭킹 종류"><button type="button" value="local" aria-pressed="true">로컬</button><button type="button" value="rival" aria-pressed="false">라이벌</button><button type="button" value="global" aria-pressed="false">글로벌</button></div>
+                        <button id="history-order" type="button" value="points">점수순</button>
+                    </div>
+                    <p id="history-status" role="status" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 6h2l-.3 8h-1.4zM12 16a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z" fill="currentColor"/></svg><span id="history-message">채보를 선택해 주세요</span></p>
+                    <ol id="history" aria-label="선택한 채보의 로컬 스코어" hidden></ol>
+                    <div id="score-tip" aria-hidden="true" hidden></div>
+                </section>
+            </section>
+            <section id="list-pane" aria-label="곡 목록">
+                <div id="list-head">
+                    <div id="library-tabs" role="group" aria-label="곡 목록 범위"><button id="library-all" type="button" aria-pressed="true">전체 곡</button><button id="library-recent" type="button" aria-pressed="false">최근 플레이</button></div>
+                    <div id="key-tabs" role="group" aria-label="키 수 [F7]"></div>
+                    <p id="list-status" role="status" aria-live="polite"></p>
+                    <p id="list-summary"></p>
+                    <p id="list-position"><span id="list-range"></span></p>
+                </div>
+                <ol id="song-list" class="song-catalog" role="listbox" aria-label="곡 목록"></ol>
+                <div id="catalog-loading" role="status" aria-live="polite" hidden>
+                    <strong>곡 로딩 중…</strong>
+                    <span>곡 목록과 난이도 정보를 불러오고 있습니다.</span>
+                </div>
+                <span class="list-track" aria-hidden="true"><i id="list-range-window"></i></span>
+            </section>
+        </div>
+        <!-- Short notices float above the screen and clear themselves; the integrity warning stays while it applies. -->
+        <div id="notices"><p id="status" role="status" aria-live="polite" hidden></p></div>
+        <footer id="commands">
+            <nav id="hints" class="hints" aria-label="명령"></nav>
+            <button id="player" type="button" title="닉네임 변경"><b id="player-name">Player</b><span><span title="pp">pp <b id="player-pp">0</b></span><span title="오늘 입력한 키 수">오늘 <b id="player-keys">0</b>키</span></span></button>
+            <nav id="hints-end" class="hints" aria-label="선곡"></nav>
+        </footer>
+        <dialog id="player-dialog" aria-labelledby="player-heading">
+            <form method="dialog">
+                <h2 id="player-heading">닉네임</h2>
+                <p><input id="player-input" maxlength="32" autocomplete="off"> <button value="save">저장</button> <button value="cancel" formnovalidate>취소 [Esc]</button></p>
+                <p id="player-status" role="status"></p>
+            </form>
+        </dialog>
+        </section>
+        <dialog id="chart-menu" aria-label="채보 추가 메뉴">
+            <p id="chart-menu-name"></p>
+            <div role="menu" aria-label="채보 동작"><button id="chart-edit" type="button" role="menuitem">채보 편집</button></div>
+        </dialog>
+        <!-- Game mode and mods share one window (F1), read by id from main.js. -->
+        <dialog id="mods-dialog" aria-labelledby="mods-heading">
+            <header id="mods-head">
+                <h2 id="mods-heading">모드</h2>
+                <form method="dialog"><button type="submit">닫기 [Esc]</button></form>
+            </header>
+            <fieldset id="play-controls" class="play-options">
+                <input id="mode" type="hidden" value="live">
+                <input id="lane-mod" type="hidden" value="">
+                <input id="visibility-mod" type="hidden" value="">
+                <input id="o2jam-mod" type="hidden" value="">
+                <input id="o2jam-pills" type="checkbox" hidden>
+                <input id="health-mode" type="hidden" value="3">
+                <input id="health-fail" type="hidden" value="0">
+                <input id="pitch" type="checkbox" checked hidden>
+                <section class="mod-section" aria-labelledby="mode-heading">
+                    <h3 id="mode-heading">게임 모드</h3>
+                    <div id="mode-buttons" class="option-buttons" role="group" aria-label="게임 모드">
+                        <button id="mode-live" type="button" data-value="live" aria-pressed="true">일반 플레이</button>
+                        <button type="button" data-value="auto" aria-pressed="false" title="Ctrl+A / V">Auto <small>Ctrl+Enter · Ctrl+A</small></button>
+                    </div>
+                </section>
+                <section class="mod-section" aria-labelledby="arrangement-heading">
+                    <h3 id="arrangement-heading">노트 배치 <output id="arrangement-value" aria-live="polite">변경 없음</output></h3>
+                    <div id="arrangement-buttons" class="mod-buttons" role="group" aria-label="노트 배치 · 함께 선택 가능">
+                        <button id="mod-mirror" type="button" data-mod="mirror" aria-pressed="false"><strong aria-hidden="true">MR</strong><span>Mirror<small>좌우 반전</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                        <button type="button" data-mod="random" aria-pressed="false"><strong aria-hidden="true">RD</strong><span>Random<small>레인 섞기</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                    </div>
+                    <p class="mod-note">함께 켜면 랜덤 배치를 좌우 반전합니다.</p>
+                </section>
+                <section class="mod-section" aria-labelledby="visibility-heading">
+                    <h3 id="visibility-heading">Visibility <output id="visibility-value" aria-live="polite">OFF</output></h3>
+                    <div id="visibility-buttons" class="mod-buttons" role="group" aria-label="노트 가시성 · 하나만 선택">
+                        <button type="button" data-visibility="hidden" aria-pressed="false"><strong aria-hidden="true">HD</strong><span>Hidden<small>판정선 전에 사라짐</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                        <button type="button" data-visibility="fadein" aria-pressed="false"><strong aria-hidden="true">FI</strong><span>Fade In<small>늦게 나타남</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                        <button type="button" data-visibility="cover" aria-pressed="false"><strong aria-hidden="true">CO</strong><span>Cover<small>상단 절반 가림</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                        <button type="button" data-visibility="flashlight" aria-pressed="false"><strong aria-hidden="true">FL</strong><span>Flashlight<small>중앙 좁은 영역만 표시</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                    </div>
+                    <p class="mod-note">하나만 선택할 수 있습니다. 켜진 항목을 다시 누르면 OFF. Hidden·Fade In은 콤보에 따라 가림 영역이 넓어집니다.</p>
+                </section>
+                <section class="mod-section" aria-labelledby="event-heading">
+                    <h3 id="event-heading">이벤트 <output id="o2jam-value" aria-live="polite">OFF</output></h3>
+                    <div id="event-buttons" class="mod-buttons" role="group" aria-label="이벤트 모드">
+                        <button id="mod-o2jam" type="button" aria-pressed="false"><strong aria-hidden="true">O2</strong><span>O2Jam<small>EASY → NORMAL → HARD</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                        <button id="mod-pills" type="button" aria-pressed="false"><strong aria-hidden="true">PL</strong><span>알약<small>KOOL 15 → GOOD 1회 COOL</small></span><span class="mod-state" aria-hidden="true">OFF</span></button>
+                    </div>
+                    <p class="mod-note">O2Jam 박자 판정·체력. 0%면 게임 오버. 켜면 아래 체력 옵션 대신 적용.</p>
+                </section>
+                <section class="mod-section" aria-labelledby="health-heading">
+                    <h3 id="health-heading">체력 · 시작 단계</h3>
+                    <div id="health-buttons" class="option-buttons" role="group" aria-label="체력 사용 여부와 시작 단계">
+                        <button type="button" data-value="0" aria-pressed="false">OFF</button>
+                        <button type="button" data-value="1" aria-pressed="false">1단 <small>EASY</small></button>
+                        <button type="button" data-value="2" aria-pressed="false">2단 <small>NORMAL</small></button>
+                        <button type="button" data-value="3" aria-pressed="true">3단 <small>HARD</small></button>
+                    </div>
+                    <p class="mod-note">0%가 되면 하위 단계로 내려갑니다. 하위 체력은 처음부터 함께 계산됩니다.</p>
+                </section>
+                <section class="mod-section" aria-labelledby="health-fail-heading">
+                    <h3 id="health-fail-heading">게임 오버 기준</h3>
+                    <div id="health-fail-buttons" class="option-buttons" role="group" aria-label="체력이 0%가 되면 게임 오버할 단계">
+                        <button type="button" data-value="0" aria-pressed="true">계속 진행</button>
+                        <button type="button" data-value="1" aria-pressed="false">1단 0%</button>
+                        <button type="button" data-value="2" aria-pressed="false">2단 0%</button>
+                        <button type="button" data-value="3" aria-pressed="false">3단 0%</button>
+                    </div>
+                    <p class="mod-note">계속 진행을 선택하면 1단이 0%가 되어도 플레이할 수 있습니다.</p>
+                </section>
+                <fieldset id="rate-controls">
+                    <legend>Time Rate <output id="rate-value" for="time-rate rate-slider">1.0×</output><span id="rate-input" hidden><input id="time-rate" type="number" min="0.5" max="2.0" step="any" value="1" required aria-label="Time Rate 직접 입력">×</span></legend>
+                    <div id="rate-presets" role="group" aria-label="Time Rate 기본 배율">
+                        <span class="rate-end" aria-hidden="true">0.5</span>
+                        <button type="button" data-rate="1" aria-pressed="true">1.0</button>
+                        <button type="button" data-rate="1.1" aria-pressed="false">1.1</button>
+                        <button type="button" data-rate="1.25" aria-pressed="false">1.25</button>
+                        <button type="button" data-rate="1.5" aria-pressed="false">1.5</button>
+                        <span class="rate-end" aria-hidden="true">2.0</span>
+                    </div>
+                    <input id="rate-slider" type="range" min="0" max="1" step="any" value="0.3" aria-label="Time Rate" aria-valuemin="0.5" aria-valuemax="2">
+                    <div class="rate-custom-row">
+                        <button id="rate-custom" type="button" aria-pressed="false" aria-controls="rate-input">임의 설정 <span id="rate-custom-state">OFF</span></button>
+                    </div>
+                </fieldset>
+                <section class="mod-section" aria-labelledby="pitch-heading">
+                    <h3 id="pitch-heading">음높이</h3>
+                    <div id="pitch-buttons" class="option-buttons" role="group" aria-label="음높이">
+                        <button type="button" data-value="true" aria-pressed="true">Pitch ON <small>배속에 맞춰 변경</small></button>
+                        <button type="button" data-value="false" aria-pressed="false">Pitch OFF <small>원래 음높이 유지</small></button>
+                    </div>
+                </section>
+                <section class="mod-section" aria-labelledby="section-heading">
+                    <h3 id="section-heading">연습 구간</h3>
+                    <div id="section-range"></div>
+                    <p class="mod-note">드래그로 지정 · 더블클릭 해제. 구간을 반복하며 기록은 남지 않습니다.</p>
+                </section>
+            </fieldset>
+            <p id="playback-status" role="status" aria-live="polite"></p>
+        </dialog>
+        <!-- View (F6 toggles), sort and filter share one window (F4). -->
+        <dialog id="advanced" aria-labelledby="advanced-heading">
+            <h2 id="advanced-heading">정렬·필터</h2>
+            <h3>보기</h3>
+            <div id="view-switch" role="group" aria-label="보기 [F6]"><button id="view-song" type="button" aria-pressed="true">곡 묶음</button><button id="view-chart" type="button" aria-pressed="false">채보 목록</button></div>
+            <h3>정렬</h3>
+            <p id="sort-note" hidden>최근 플레이 목록은 플레이한 순서로 정렬합니다.</p>
+            <div id="sort-options" role="group" aria-label="정렬 기준"></div>
+            <div id="sort-direction" role="group" aria-label="정렬 방향 [Shift+F4]"><button id="sort-asc" type="button" aria-pressed="true">오름차순</button><button id="sort-desc" type="button" aria-pressed="false">내림차순</button></div>
+            <p hidden>
+                <label for="search-sort">정렬 [F4]</label> <select id="search-sort"><option value="title">제목</option><option value="level" selected>레벨</option><option value="length">길이</option><option value="lamp">클리어 램프</option></select>
+            </p>
+            <p><label><input id="adjusted-level" type="checkbox" checked> 배속 적용 레벨로 정렬·필터</label></p>
+            <h3>필터</h3>
+            <form id="filters" aria-label="필터">
+                <div id="key-filter" role="group" aria-label="키 수"></div>
+                <div id="lamp-filter" role="group" aria-label="클리어 램프"></div>
+                <div id="level-range"></div>
+                <div id="length-range"></div>
+            </form>
+            <form method="dialog"><button type="submit">닫기 [Esc]</button></form>
+        </dialog>
+        <!-- Options follow Quaver's menu: section tabs on the left, one "name | value" row per item, changes apply at once. -->
+        <dialog id="settings" aria-labelledby="settings-heading">
+            <header id="settings-head">
+                <h2 id="settings-heading">환경 설정</h2>
+                <form method="dialog"><button type="submit">닫기 [Esc]</button></form>
+            </header>
+            <nav id="settings-tabs" role="tablist" aria-label="환경 설정 탭" aria-orientation="vertical">
+				<button id="tab-language" type="button" role="tab" aria-controls="panel-language" aria-selected="false">언어</button>
+                <button id="tab-keys" type="button" role="tab" aria-controls="panel-keys" aria-selected="true">키 바인딩</button>
+                <button id="tab-scroll" type="button" role="tab" aria-controls="panel-scroll" aria-selected="false">스크롤</button>
+                <button id="tab-display" type="button" role="tab" aria-controls="panel-display" aria-selected="false">화면</button>
+                <button id="tab-hud" type="button" role="tab" aria-controls="panel-hud" aria-selected="false">HUD</button>
+                <button id="tab-hud-layout" type="button" role="tab" aria-controls="panel-hud-layout" aria-selected="false">HUD 배치</button>
+                <button id="tab-audio" type="button" role="tab" aria-controls="panel-audio" aria-selected="false">오디오</button>
+                <button id="tab-chat" type="button" role="tab" aria-controls="panel-chat" aria-selected="false">채팅 · 알림</button>
+                <button id="tab-folders" type="button" role="tab" aria-controls="panel-folders" aria-selected="false">곡 폴더</button>
+                <button id="tab-online" type="button" role="tab" aria-controls="panel-online" aria-selected="false">온라인</button>
+            </nav>
+            <section id="panel-language" role="tabpanel" aria-labelledby="tab-language" hidden>
+                <form id="language-settings">
+                    <div class="settings-row"><label for="language-choice">언어 / Language</label><span><select id="language-choice"><option value="ko">한국어</option><option value="en">English</option></select></span></div>
+                    <p id="language-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+            <form id="preferences" hidden>
+                <!-- Pick a key count, then bind directly on its left-to-right lane layout. -->
+                <section id="panel-keys" role="tabpanel" aria-labelledby="tab-keys">
+                    <div id="key-controls"><label for="key-count">키 수</label> <select id="key-count"></select></div>
+                    <div id="key-binding">
+                        <p id="key-help">바꿀 레인을 누른 뒤 사용할 키를 누르세요.</p>
+                        <div id="lane-keys" role="group" aria-label="플레이 레인 키 배치"></div>
+                        <p id="key-status" role="status" aria-live="polite"></p>
+                        <p><button id="key-again" type="button">전체 키 순서대로 입력</button> <button id="profile-reset" type="button">이 키 수 초기화 (키·스크롤)</button></p>
+                        <div id="key-pad" tabindex="0" role="group" aria-label="키 입력 확인 영역">입력 확인 — 여기를 누르고 설정한 키를 누르세요.</div>
+                        <p><span id="key-chord">동시 입력 0개 · 최대 0개</span> <button id="key-chord-reset" type="button">최대값 초기화</button> <button id="key-test" type="button">미니 테스트</button></p>
+                    </div>
+                </section>
+                <section id="panel-scroll" role="tabpanel" aria-labelledby="tab-scroll" hidden>
+                    <!-- Scroll is shared by every key count; each key count only adds its own offset below. -->
+                    <div class="settings-row"><label for="profile-scroll-mode">스크롤 기준</label><span><select id="profile-scroll-mode"><option value="speed">속도</option><option value="exposure">기준 노출 시간</option></select></span></div>
+                    <div class="settings-row" id="scroll-speed-row"><label for="profile-scroll">스크롤 속도</label><span><input id="profile-scroll" type="number" min="1" max="40" step="0.1" value="8" required> (1–40) <output id="scroll-exposure" for="profile-scroll profile-scroll-offset time-rate" aria-live="polite">— ms</output></span></div>
+                    <p id="scroll-speed-keys">PgUp/PgDn ±1 · Alt ±0.1</p>
+                    <div class="settings-row" id="exposure-row"><label for="profile-exposure">기준 노출 시간</label><span><input id="profile-exposure" type="number" min="100" max="5000" step="1" value="750" required> ms (100–5000)</span></div>
+                    <p id="exposure-keys">PgUp/PgDn ±25 ms</p>
+                    <div class="settings-row"><label for="profile-speed-change">변속 반영</label><span><input id="profile-speed-change" type="number" min="0" max="2" step="0.05" value="1" required> (0–2)</span></div>
+                    <h3>레인 커버</h3>
+                    <div class="settings-row"><label for="cover-sudden">SUDDEN+</label><span><input id="cover-sudden-on" type="checkbox" aria-label="SUDDEN+ 사용"> <input id="cover-sudden" type="number" min="0" max="100" step="0.1" value="20" required> %</span></div>
+                    <div class="settings-row"><label for="cover-hidden">HIDDEN+</label><span><input id="cover-hidden-on" type="checkbox" aria-label="HIDDEN+ 사용"> <input id="cover-hidden" type="number" min="0" max="100" step="0.1" value="10" required> %</span></div>
+                    <div class="settings-row"><label for="cover-lift">LIFT</label><span><input id="cover-lift-on" type="checkbox" aria-label="LIFT 사용"> <input id="cover-lift" type="number" min="0" max="100" step="0.1" value="10" required> %</span></div>
+                    <p>플레이 중 F4: SUDDEN+ 켜기·끄기 · ↑/↓: 1% · Ctrl+휠: 0.5%</p>
+                    <h3>키 수별 보정</h3>
+                    <div class="settings-row"><span>키 수</span><div class="lane-picker" role="group" aria-label="키 수"></div></div>
+                    <div class="settings-row" id="scroll-offset-row"><label for="profile-scroll-offset">스크롤 속도 ±</label><span><input id="profile-scroll-offset" type="number" min="-39" max="39" step="0.1" value="0" required> <output for="profile-scroll-offset" id="scroll-effective"></output></span></div>
+                    <div class="settings-row" id="exposure-offset-row"><label for="profile-exposure-offset">노출 시간 ±</label><span><input id="profile-exposure-offset" type="number" min="-4900" max="4900" step="1" value="0" required> ms <output for="profile-exposure-offset" id="exposure-effective"></output></span></div>
+                    <p id="profile-status" role="status" aria-live="polite"></p>
+                </section>
+            </form>
+            <section id="panel-display" role="tabpanel" aria-labelledby="tab-display" hidden>
+                <form id="display-settings" hidden>
+                    <div class="settings-row"><label for="display-dim">배경 dim</label><span><input id="display-dim" type="range" min="0" max="100" step="1" value="75"> <output for="display-dim">75</output></span></div>
+                    <div class="settings-row"><label for="display-background">배경 이미지</label><span><input id="display-background" type="checkbox" checked></span></div>
+                    <div class="settings-row"><label for="display-storyboard">스토리보드</label><span><input id="display-storyboard" type="checkbox" checked></span></div>
+                    <!-- Window modes and screen scaling follow osu!lazer's Layout settings. -->
+                    <div class="settings-row"><label for="display-windowMode">창 모드</label><span><select id="display-windowMode"><option value="windowed">창</option><option value="borderless">테두리 없음</option><option value="fullscreen">전체화면</option></select></span></div>
+                    <div class="settings-row"><label for="display-resolution">해상도</label><span><select id="display-resolution" aria-describedby="display-resolution-hint"><option value="1024x640">1024 × 640</option><option value="1280x720">1280 × 720</option><option value="1366x768">1366 × 768</option><option value="1600x900" selected>1600 × 900 (기본)</option><option value="1920x1080">1920 × 1080</option><option value="2560x1440">2560 × 1440</option><option value="3840x2160">3840 × 2160</option></select></span></div>
+                    <p id="display-resolution-hint">창 모드에 적용됩니다. 전체화면·테두리 없음은 모니터 크기를 사용합니다.</p>
+                    <div class="settings-row"><label for="display-letterbox">Letterbox</label><span><input id="display-letterbox" type="checkbox"></span></div>
+                    <div id="display-letterbox-area" hidden>
+                    <div class="settings-row"><label for="display-letterboxWidth">가로 크기 %</label><span><input id="display-letterboxWidth" type="range" min="20" max="100" step="1" value="80"> <output for="display-letterboxWidth">80</output></span></div>
+                    <div class="settings-row"><label for="display-letterboxHeight">세로 크기 %</label><span><input id="display-letterboxHeight" type="range" min="20" max="100" step="1" value="80"> <output for="display-letterboxHeight">80</output></span></div>
+                    <div class="settings-row"><label for="display-letterboxX">가로 위치</label><span><input id="display-letterboxX" type="range" min="-50" max="50" step="1" value="0"> <output for="display-letterboxX">0</output></span></div>
+                    <div class="settings-row"><label for="display-letterboxY">세로 위치</label><span><input id="display-letterboxY" type="range" min="-50" max="50" step="1" value="0"> <output for="display-letterboxY">0</output></span></div>
+                    </div>
+                    <div class="settings-row"><label for="display-cursorSize">커서 크기 %</label><span><input id="display-cursorSize" type="range" min="50" max="200" step="1" value="100"> <output for="display-cursorSize">100</output></span></div>
+                    <p><button id="display-reset" type="button">화면 설정 초기화</button></p>
+                    <p id="display-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+            <!-- osu!lazer keeps HUD as its own settings group; it saves with the display settings. -->
+            <section id="panel-hud" role="tabpanel" aria-labelledby="tab-hud" hidden>
+                <form id="hud-settings" hidden>
+                    <!-- Like osu!lazer's skin editor: the selected chart plays on Auto while every change shows at once. -->
+                    <p><button id="hud-edit" type="button" hidden>HUD 편집</button></p>
+                    <div class="settings-row"><label for="display-skin">스킨</label><span><select id="display-skin" hidden><option value="argon">Argon</option><option value="triangles">Triangles</option><option value="classic">Classic</option><option value="circles">Circles</option><option value="o2jam">O2Jam</option></select>
+                        <!-- Each skin shows a picture of its own play field (internal/play TestSkinThumbnails). -->
+                        <span id="skin-picker" role="group" aria-label="스킨"><button type="button" value="argon"><img src="/settings/skins/argon.png" alt="">Argon</button><button type="button" value="triangles"><img src="/settings/skins/triangles.png" alt="">Triangles</button><button type="button" value="classic"><img src="/settings/skins/classic.png" alt="">Classic</button><button type="button" value="circles"><img src="/settings/skins/circles.png" alt="">Circles</button><button type="button" value="o2jam"><img src="/settings/skins/o2jam.png" alt="">O2Jam</button></span></span></div>
+                    <div class="settings-row"><label for="display-laneLines">레인 구분선</label><span><input id="display-laneLines" type="checkbox"></span></div>
+                    <!-- ONGEKI's lane brightness; 100 hides the lanes like its stealth field. -->
+                    <div class="settings-row"><label for="display-laneDim">레인 dim</label><span><input id="display-laneDim" type="range" min="0" max="100" step="1" value="0"> <output for="display-laneDim">0</output></span></div>
+                    <div class="settings-row"><label for="display-noteColour">노트 색</label><span><select id="display-noteColour"><option value="">스킨</option><option value="snap">박자</option><option value="assist">색각 보조</option></select></span></div>
+                    <div class="settings-row"><label for="display-noteThickness">노트 두께</label><span><input id="display-noteThickness" type="range" min="50" max="200" step="1" value="100"> <output for="display-noteThickness">100</output>% <small>스킨 기본 두께 기준 · O2Jam 32px</small></span></div>
+                    <div class="settings-row"><label for="display-tps">업데이트 빈도</label><span><select id="display-tps"><option value="60">60 TPS</option><option value="120">120 TPS</option><option value="144">144 TPS</option><option value="240" selected>240 TPS</option><option value="360">360 TPS</option><option value="480">480 TPS</option><option value="1000">1000 TPS</option><option value="-1">FPS에 맞춤</option></select></span></div>
+                    <div class="settings-row"><label for="display-frameLimit">프레임 제한</label><span><select id="display-frameLimit"><option value="vsync">모니터 주사율 (VSync)</option><option value="unlimited">제한 없음</option></select></span></div>
+                    <div class="settings-row"><label for="display-ghost">Ghost</label><span><select id="display-ghost"><option value="target">목표 점수</option><option value="max">목표 점수 (최대 가능)</option><option value="off">OFF</option></select></span></div>
+                    <div class="settings-row"><label for="display-ghostScore">Ghost 목표 점수</label><span><input id="display-ghostScore" type="number" min="1" max="100000000" step="1" value="900000"> <small>현재 만점 1,100,000점</small></span></div>
+                    <div class="settings-row"><label for="display-abort">목표 불가 시 중단</label><span><input id="display-abort" type="checkbox"></span></div>
+                    <div class="settings-row"><label for="display-hud">HUD</label><span><select id="display-hud"><option value="standard">기본</option><option value="focus">집중</option></select></span></div>
+                    <div class="settings-row"><label for="display-timeDisplay">시간 표시</label><span><select id="display-timeDisplay"><option value="pie">파이</option><option value="bar">진행 막대</option></select></span></div>
+                    <div class="settings-row"><label for="display-comboPosition">콤보 위치</label><span><select id="display-comboPosition"><option value="center">레인 가운데</option><option value="below">레인 아래</option><option value="left">왼쪽 HUD</option></select></span></div>
+                    <div class="settings-row"><label for="display-judgementPosition">판정 위치</label><span><select id="display-judgementPosition"><option value="center">레인 가운데</option><option value="below">레인 아래</option><option value="left">왼쪽 HUD</option></select></span></div>
+                    <div class="settings-row"><label for="display-timingThreshold">Early / Late 표시</label><span><select id="display-timingThreshold"><option value="kool">KOOL 이하 (KOOL · COOL · GOOD)</option><option value="cool" selected>COOL 이하 (COOL · GOOD)</option><option value="good">GOOD만</option><option value="off">끄기</option></select> <small>Early 파란색 · Late 노란색 · MISS와 정확한 입력은 숨김</small></span></div>
+                    <div class="settings-row"><label for="display-judgementShow">판정 표시</label><span><select id="display-judgementShow"><option value="">전부</option><option value="cool">COOL 이하</option><option value="good">GOOD 이하</option><option value="miss">MISS만</option><option value="off">끄기</option></select></span></div>
+                    <div class="settings-row"><label for="display-hideCombo">콤보 숨기기</label><span><input id="display-hideCombo" type="checkbox"></span></div>
+                </form>
+            </section>
+            <section id="panel-hud-layout" role="tabpanel" aria-labelledby="tab-hud-layout" hidden>
+                <form id="hud-layout-form">
+                    <!-- osu!lazer skin editor: pick on the canvas, drag to move, corner handles scale, arrows nudge 1, Ctrl+Z undoes. -->
+                    <div id="hud-preview"></div>
+                    <span id="hud-items" class="choice" role="group" aria-label="HUD 항목"></span>
+                    <div id="hud-layout-controls">
+                        <label for="hud-x-number">X</label><input id="hud-x-number" type="number" step="1">
+                        <label for="hud-y-number">Y</label><input id="hud-y-number" type="number" step="1">
+                        <label for="hud-scale-number">크기 %</label><input id="hud-scale-number" type="number" min="25" max="200" step="1" value="100">
+                        <button id="hud-reset-item" type="button">항목 초기화</button>
+                        <select id="hud-preview-keys" aria-label="미리보기 키 수"></select>
+                        <button id="hud-undo" type="button">되돌리기</button>
+                        <button id="hud-reset-all" type="button">전체 초기화</button>
+                    </div>
+                    <p id="hud-layout-status" role="status"></p>
+                </form>
+            </section>
+            <!-- Extra local song folders (settings/folders.js), e.g. an O2Mania Music\o2jam folder. -->
+            <section id="panel-folders" role="tabpanel" aria-labelledby="tab-folders" hidden>
+                <form id="folder-form" hidden>
+                    <div id="folder-list"></div>
+                    <div class="settings-row"><label for="folder-path">폴더 추가</label><span><input id="folder-path" type="text" autocomplete="off" placeholder="C:\O2Mania\Music\o2jam"> <button type="submit">추가</button> <button id="folder-pick" type="button">찾아보기</button></span></div>
+                    <p id="folder-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+            <section id="panel-online" role="tabpanel" aria-labelledby="tab-online" hidden>
+                <form id="score-server-form" hidden>
+                    <div class="settings-row"><label for="score-server-url">점수 서버</label><span><input id="score-server-url" type="url" placeholder="http://127.0.0.1:8080" autocomplete="off"> <button id="score-server-save" type="submit">저장</button></span></div>
+                    <p>일반 플레이의 점수와 리플레이를 자동으로 제출합니다. 빈 주소로 저장하면 제출을 끕니다.</p>
+                    <p id="score-server-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+            <section id="panel-chat" role="tabpanel" aria-labelledby="tab-chat" hidden>
+                <h3>채팅 · 알림</h3>
+                <div id="chat-settings"></div>
+            </section>
+            <section id="panel-audio" role="tabpanel" aria-labelledby="tab-audio" hidden>
+                <form id="audio-settings" hidden>
+                    <h3>볼륨</h3>
+                    <div class="settings-row"><label for="audio-master">마스터</label><span><input id="audio-master" type="range" min="0" max="100" step="1" value="100"> <output for="audio-master">100</output></span></div>
+                    <div class="settings-row"><label for="audio-music">음악</label><span><input id="audio-music" type="range" min="0" max="100" step="1" value="100"> <output for="audio-music">100</output></span></div>
+                    <div class="settings-row"><label for="audio-keys">키음</label><span><input id="audio-keys" type="range" min="0" max="100" step="1" value="100"> <output for="audio-keys">100</output></span></div>
+                    <div class="settings-row"><label for="audio-effects">효과음</label><span><input id="audio-effects" type="range" min="0" max="100" step="1" value="50"> <output for="audio-effects">50</output></span></div>
+                    <!-- ONGEKI's TAP and guide sounds: one on every key press, one at every note's judgement time. -->
+                    <div class="settings-row"><label for="audio-hit">타격음</label><span><select id="audio-hitSound" aria-label="타격음 종류"><option value="click">클릭</option><option value="wood">우드</option><option value="glass">글래스</option><option value="pluck">플럭</option></select> <input id="audio-hit" type="range" min="0" max="100" step="1" value="0"> <output for="audio-hit">0</output></span></div>
+                    <div class="settings-row"><label for="audio-guide">가이드음</label><span><input id="audio-guide" type="range" min="0" max="100" step="1" value="0"> <output for="audio-guide">0</output></span></div>
+                    <p><button id="audio-reset" type="button">볼륨 초기화</button> <span id="audio-status" role="status" aria-live="polite"></span></p>
+                </form>
+                <form id="offsets" aria-labelledby="offsets-heading" hidden>
+                    <h3 id="offsets-heading">타이밍 보정</h3>
+                    <div class="settings-row"><label for="global-offset">전체 오프셋</label><span><input id="global-offset" type="number" min="-1000" max="1000" step="1" value="0" required> ms <button id="offset-reset-global" type="button">0으로</button></span></div>
+                    <div class="settings-row"><label for="chart-offset">선택한 채보 오프셋</label><span><input id="chart-offset" type="number" min="-1000" max="1000" step="1" value="0" required disabled> ms <button id="offset-reset-chart" type="button" disabled>0으로</button></span></div>
+                    <div class="settings-row"><label for="judge-offset">판정 오프셋</label><span><input id="judge-offset" type="number" min="-1000" max="1000" step="1" value="0" required> ms <button id="offset-reset-judge" type="button">0으로</button> <small>노트 위치 유지 · 양수는 늦게 판정</small></span></div>
+                    <div class="settings-row" id="auto-offset-row"><label for="auto-offset">자동 보정</label><span><input id="auto-offset" type="checkbox"> 플레이마다 평균 오차만큼 전체 오프셋 이동</span></div>
+                    <p>양수는 노트를 음악보다 늦게 둡니다. <span id="offset-total"></span></p>
+                    <p id="offset-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+        </dialog>
+        <section id="result" aria-labelledby="result-heading" hidden>
+            <header id="result-head">
+                <h1 id="result-heading" tabindex="-1">RESULT</h1>
+                <p id="result-state"></p>
+                <p id="result-song"></p>
+                <div id="result-meta">
+                    <p id="result-chart-name"><b id="result-keys"></b><span id="result-difficulty"></span></p>
+                    <p id="result-flags"></p>
+                </div>
+                <details id="result-run">
+                    <summary>플레이 정보</summary>
+                    <dl>
+                        <dt>모드</dt><dd id="result-mode"></dd>
+                        <dt>일시정지</dt><dd id="result-pauses"></dd>
+                        <dt>타이밍</dt><dd id="result-offsets"></dd>
+                        <dt id="result-adjustment-label" hidden>자동 보정</dt><dd id="result-adjustment" hidden></dd>
+                    </dl>
+                </details>
+                <p id="result-calibration" hidden><span></span> <button id="calibration-undo" type="button">되돌리기</button></p>
+            </header>
+            <div id="result-score">
+                <dl id="result-total">
+                    <div class="result-points"><dt>SCORE</dt><dd id="result-points"></dd></div>
+                    <div><dt>정확도</dt><dd id="result-accuracy"></dd></div>
+                    <div><dt>최대 콤보</dt><dd id="result-combo"></dd></div>
+                </dl>
+                <h2 id="comparison-heading">이전 최고 대비</h2>
+                <p id="comparison-status" role="status"></p>
+                <dl id="comparison" hidden>
+                    <dt>점수</dt><dd id="delta-points"></dd>
+                    <dt>정확도 (%p)</dt><dd id="delta-accuracy"></dd>
+                    <dt>최대 콤보</dt><dd id="delta-combo"></dd>
+                    <dt>KOOL</dt><dd id="delta-Kool"></dd>
+                    <dt>COOL</dt><dd id="delta-Cool"></dd>
+                    <dt>GOOD</dt><dd id="delta-Good"></dd>
+                    <dt>MISS</dt><dd id="delta-Miss"></dd>
+                </dl>
+            </div>
+            <div id="result-detail">
+                <h2>판정 내역</h2>
+                <dl id="result-judgements">
+                    <div class="result-grade" data-grade="kool"><dt>KOOL</dt><dd id="result-kool"></dd><dd class="result-track" aria-hidden="true"><span id="result-bar-kool"></span></dd></div>
+                    <div class="result-grade" data-grade="cool"><dt>COOL</dt><dd id="result-cool"></dd><dd class="result-track" aria-hidden="true"><span id="result-bar-cool"></span></dd></div>
+                    <div class="result-grade" data-grade="good"><dt>GOOD</dt><dd id="result-good"></dd><dd class="result-track" aria-hidden="true"><span id="result-bar-good"></span></dd></div>
+                    <div class="result-grade" data-grade="miss"><dt>MISS</dt><dd id="result-miss"></dd><dd class="result-track" aria-hidden="true"><span id="result-bar-miss"></span></dd></div>
+                </dl>
+                <dl id="result-timing" hidden>
+                    <div data-timing="fast"><dt>FAST</dt><dd id="result-fast"></dd></div>
+                    <div data-timing="slow"><dt>SLOW</dt><dd id="result-slow"></dd></div>
+                </dl>
+            </div>
+            <footer id="result-foot">
+                <p id="result-submission" hidden><span id="result-submission-status" role="status" aria-live="polite"></span> <button id="submission-retry" type="button" hidden>점수 제출 재시도</button></p>
+                <p id="result-saved"></p>
+                <p id="result-warnings"></p>
+                <button id="back" type="button">곡 선택 <kbd>Esc</kbd></button>
+                <button id="watch" type="button">리플레이 보기</button>
+                <button id="retry" type="button">다시 플레이</button>
+            </footer>
+        </section>
+        <section id="editor" aria-label="채보 편집" hidden></section>
+    </main>
+    <script type="module" src="/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+#multi-panel { position: fixed; inset: 5vh 4vw; width: min(900px, 88vw); max-height: 85vh; overflow: auto; z-index: 50; box-sizing: border-box; padding: 16px; }
+#multi-panel header, #multi-panel form, #multi-actions { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+#multi-panel [hidden] { display: none; }
+body:has(.room-chat-panel:not([hidden])) #multi-panel { inset: 5vh auto auto 24px; margin: 0; width: min(900px, calc(100vw - 328px)); }
+#multi-panel input[name="rate"] { width: 4.5em; }
+#multi-panel header { justify-content: space-between; }
+#multi-panel h2 { margin: 0 0 8px; }
+#multi-panel table { width: 100%; margin-block: 16px; }
+#multi-panel #multi-select select[name="chart"] { max-width: 36em; }
+#multi-panel input[name="endpoint"] { width: 18em; }

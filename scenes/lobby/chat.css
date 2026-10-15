@@ -1,0 +1,28 @@
+/* The song list reserves a separate column while the chat drawer is open. */
+.room-chat-toggle { position: fixed; right: 0; top: 45%; z-index: 1101; max-width: 9em; padding: 8px; }
+.room-chat-toggle[aria-expanded="true"] { top: 12px; }
+.room-chat-panel { position: fixed; right: 0; top: 0; bottom: 0; width: 360px; max-width: calc(100vw - 24px); z-index: 1100; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 0; padding: 0 12px 12px; box-sizing: border-box; }
+.room-chat-panel[hidden] { display: none; }
+.room-chat-head { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 6px; padding: 16px 0 12px; }
+.room-chat-context { grid-column: 1 / -1; overflow-wrap: anywhere; }
+.room-chat-resize { position: absolute; left: -4px; top: 0; bottom: 0; width: 8px; }
+.room-chat-head h2, .room-chat-head p { margin: 0; }
+.room-chat-body { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; padding: 12px 0; }
+.room-chat-empty { position: absolute; top: 24px; left: 12px; right: 12px; margin: 0; }
+.room-chat-log { overflow-y: auto; min-height: 0; overflow-wrap: anywhere; padding: 0; margin: 0; }
+/* osu!lazer StandAloneMessage: 45 px time, 5+90+5 px name, the rest for text; 2 px row padding. */
+.room-chat-message { display: grid; grid-template-columns: 40px 76px minmax(0, 1fr); align-items: start; padding: 5px 2px; margin: 0; gap: 6px; }
+.room-chat-name { justify-self: end; overflow-wrap: anywhere; }
+.room-chat-new { width: 100%; }
+.room-chat-compose { display: grid; gap: 6px; padding-top: 12px; }
+.room-chat-compose textarea { box-sizing: border-box; width: 100%; height: 40px; min-height: 40px; max-height: 112px; padding: 10px; resize: none; }
+.room-chat-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.room-chat-count { flex: 1; min-width: 0; }
+.room-chat-actions button { flex: 0 0 auto; min-width: 3.5em; }
+.room-chat-status { margin: 0; min-height: 1.3em; overflow-wrap: anywhere; }
+.room-chat-ticker, .room-chat-popup { position: fixed; right: 12px; width: 336px; max-width: calc(100vw - 48px); z-index: 1102; padding: 12px; overflow-wrap: anywhere; text-align: left; }
+.room-chat-ticker { bottom: 24px; }
+.room-chat-popup { top: 80px; }
+.chat-settings { display: grid; padding: 8px 0; }
+.chat-settings > p { display: flex; gap: 12px; align-items: center; margin: 0; }
+.chat-settings-dialog { width: min(520px, calc(100vw - 48px)); max-height: calc(100vh - 48px); overflow-y: auto; padding: 24px; }

@@ -1,0 +1,17 @@
+combobreak.ogg  Kenney Interface Sounds 1.0 scratch_004, CC0 1.0 (https://kenney.nl/assets/interface-sounds).
+                Stands in for osu!lazer Gameplay/combobreak; level matched to that sample's RMS.
+
+pause-loop.ogg  "Heavenly Loop" by isaiah658, CC0 1.0 (https://opengameart.org/content/heavenly-loop).
+                High shelf -4 dB at 1.5 kHz, resampled to 48 kHz, lowered to -32 dBFS mean.
+
+hit-click.ogg   Kenney Interface Sounds 1.0 click_001, CC0 1.0 (https://kenney.nl/assets/interface-sounds).
+hit-pluck.ogg   Kenney Interface Sounds 1.0 pluck_001, CC0 1.0.
+guide.ogg       Kenney Interface Sounds 1.0 tick_002, CC0 1.0.
+hit-wood.ogg    Kenney Impact Sounds 1.0 impactWood_light_000, CC0 1.0 (https://kenney.nl/assets/impact-sounds).
+hit-glass.ogg   Kenney Impact Sounds 1.0 impactGlass_light_000, CC0 1.0.
+                These five stand in for ONGEKI's TAP and guide sounds; resampled to 48 kHz mono.
+
+shutter.ogg     "DSLR Shutter fast 006" by ristooooo1, CC0 1.0 (https://freesound.org/s/539136/).
+                Stands in for osu!lazer UI/shutter; same file as audio/sounds/shutter.ogg.
+pop-out.ogg     Kenney Interface Sounds 1.0 minimize_009, CC0 1.0; same file as audio/sounds/pop-out.ogg
+                [UI/overlay-pop-out], played when a screenshot toast is closed.

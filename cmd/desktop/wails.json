@@ -1,0 +1,15 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "gosu",
+  "outputfilename": "gosu.exe",
+  "frontend:install": "",
+  "frontend:build": "",
+  "frontend:dir": "../../scenes",
+  "assetdir": "../../scenes",
+  "reloaddirs": "../../internal,../../scenes,../../songlist,../../chartedit,../../audio,../../preferences",
+  "build:dir": "../../build",
+  "postBuildHooks": {
+    "windows/*": "go build -ldflags '-H windowsgui' -o game.exe ../../cmd/game"
+  },
+  "version": "2"
+}

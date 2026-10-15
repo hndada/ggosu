@@ -1,0 +1,21 @@
+Kenney sound packs, CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/).
+Interface Sounds 1.0: https://kenney.nl/assets/interface-sounds
+UI Audio: https://kenney.nl/assets/ui-audio
+Each file stands in for the osu!lazer sample in brackets; level matched to that sample's RMS.
+
+hover.ogg      Interface Sounds click_002        [UI/default-hover]
+select.ogg     UI Audio click4                   [UI/default-select]
+check-on.ogg   Interface Sounds toggle_001       [UI/check-on]
+check-off.ogg  Interface Sounds toggle_002       [UI/check-off]
+notch.ogg      Interface Sounds tick_002         [UI/notch-tick]
+pop-in.ogg     Interface Sounds maximize_009     [UI/overlay-pop-in]
+pop-out.ogg    Interface Sounds minimize_009     [UI/overlay-pop-out]
+back.ogg       Interface Sounds back_002         [UI/screen-back]
+error.ogg      Interface Sounds error_006        [UI/generic-error]
+tab.ogg        UI Audio rollover5                [UI/tabselect-select]
+move.ogg       Interface Sounds glass_002        [SongSelect/select-difficulty]
+confirm.ogg    Interface Sounds confirmation_002 [SongSelect/confirm-selection]
+random.ogg     Interface Sounds confirmation_004 [SongSelect/select-random]
+
+shutter.ogg    "DSLR Shutter fast 006" by ristooooo1, CC0 1.0 (https://freesound.org/s/539136/)  [UI/shutter]
+               +9 dB through a -1 dBFS limiter (RMS -26 dB against the sample's -24 dB), 48 kHz mono.

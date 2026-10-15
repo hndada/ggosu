@@ -1,0 +1,5 @@
+html, body { height: 100%; margin: 0; overflow: hidden; }
+body { background: var(--bg); color: var(--text); }
+#game-preparation:not([hidden]) { height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; padding: 32px; text-align: center; }
+#game-preparation p { max-width: 720px; margin: 0; }
+#start { padding: 12px 32px; }

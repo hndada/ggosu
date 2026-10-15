@@ -1,0 +1,95 @@
+/* Layout, then the game look: theme.css supplies the palette, fonts, buttons and inputs; colours here are theme variables only. */
+/* The home page fits one screen: header, intro row, then charts beside a narrow side column, footer at the foot. */
+body { position: relative; display: grid; grid-template-rows: auto 1fr auto; min-height: 100vh; max-width: 1200px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; overflow-wrap: anywhere; }
+body > a:first-child { position: absolute; top: 4px; left: 24px; z-index: 1; }
+.site-header, nav, .links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+.site-header { justify-content: space-between; padding: 14px 0 10px; }
+/* Read by screen readers, not drawn: the header already shows the name and the field its hint. */
+.hidden-label { position: absolute; width: 1px; height: 1px; overflow: hidden; margin: -1px; padding: 0; }
+.links a { display: inline-block; padding: 10px 24px; }
+footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px; padding: 12px 0; margin-top: 16px; }
+footer p { margin: 0; }
+
+.home { display: grid; grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: "intro intro" "charts side"; gap: 16px 40px; align-content: start; }
+.home p, .home h1, .home h2, .home h3, .home h4, .home ul { margin: 0; }
+.home ul { padding: 0; }
+.home li { display: block; }
+.intro { grid-area: intro; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+.intro .links { margin-left: auto; }
+#charts { grid-area: charts; display: grid; gap: 12px; align-content: start; }
+.search { display: grid; gap: 6px; }
+.search div { display: flex; flex-wrap: wrap; gap: 8px; }
+.search input { flex: 1 1 200px; min-width: 0; height: 40px; box-sizing: border-box; padding: 0 12px; }
+.list-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 4px; }
+.list-head p:last-child { margin-left: auto; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.charts > li { display: flex; flex-wrap: wrap; align-items: baseline; align-content: start; gap: 0 8px; min-width: 0; padding: 8px 12px; }
+.charts ul { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.charts ul a { display: inline-block; padding: 2px 10px; }
+.home aside { grid-area: side; display: grid; gap: 16px; align-content: start; }
+.home aside > section { display: grid; gap: 6px; padding-top: 8px; }
+#records { display: grid; gap: 4px; }
+#records li { padding: 6px 10px; }
+#records p { margin-top: 2px; }
+
+.about { max-width: 760px; }
+.about dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 24px; }
+.about dd { margin: 0; }
+details { margin: 12px 0; }
+@media (max-width: 760px) {
+    body { padding: 0 16px; }
+    body > a:first-child { left: 16px; }
+    .home { grid-template-columns: minmax(0, 1fr); grid-template-areas: "intro" "charts" "side"; gap: 16px; }
+    .intro .links { margin-left: 0; }
+}
+@media (max-width: 440px) {
+    .charts { grid-template-columns: minmax(0, 1fr); }
+    nav, .links { gap: 8px 16px; }
+}
+
+/* The site keeps the system cursor; theme.css hides it only for the game's in-window cursor. */
+*, *::before, *::after { cursor: revert !important; }
+a { color: var(--text); text-decoration: none; }
+a:hover { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); }
+/* The skip link shows only while it has keyboard focus. */
+body > a:first-child { color: var(--dim); font-size: 12px; opacity: 0; }
+body > a:first-child:focus { opacity: 1; }
+/* Brand and title in the counter face, like the title screen's gosu name. */
+.site-header > a { font-family: "Gosu Counter", "Gosu UI", sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.intro > p:not(.links) { color: var(--dim); font-size: 20px; font-weight: 700; }
+nav a { font-weight: 700; }
+nav a[aria-current="page"] { color: var(--accent); }
+footer nav a { font-weight: 400; color: var(--dim); }
+footer nav a:hover { color: var(--accent); }
+/* Call-to-action links read as the game's buttons; the first one is the accent button, like Retry on results. */
+.links a { background: var(--button); color: var(--text); border: 1px solid var(--button); border-bottom: 1px solid var(--button-light); font-size: 17px; font-weight: 700; }
+.links a:first-child { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.links a:hover { border-color: var(--accent); }
+.links a:first-child:hover { color: var(--on-accent); }
+h2 { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: var(--dim); }
+h3 { font-size: 17px; }
+#q { background: var(--search); border: 2px solid var(--dim); font-size: 17px; }
+#q:focus { border-color: var(--accent); outline: 0; }
+.list-head p, #records-status, #records p, .home aside p { color: var(--dim); }
+.list-head p { font-size: 12px; }
+.list-head a, .home aside p a { color: var(--text); }
+.list-head a:hover, .home aside p a:hover { color: var(--accent); }
+/* Song rows as in song select: a 4px bar reserved on every row lights in the accent with the tint behind. */
+.charts > li, #records li { border-left: 4px solid transparent; background: var(--scrim); transition: background 0.12s ease-out, border-color 0.12s ease-out; }
+.charts > li:hover, .charts > li:focus-within, #records li:hover, #records li:focus-within { border-left: 4px solid var(--accent); background: var(--pulse-rest); }
+.charts h4 { font-size: 17px; font-weight: 700; }
+.charts h4 + p { color: var(--dim); font-size: 13px; }
+/* Each chart is a chip: level in the song-select level face, then keys and difficulty. */
+.charts ul a { background: var(--field); border: 1px solid var(--line); font-size: 13px; font-variant-numeric: tabular-nums; }
+.charts ul a:hover, .charts ul a:focus-visible { border-color: var(--accent); color: var(--text); }
+.charts ul b { color: var(--accent); font-family: ui-monospace, Consolas, monospace; font-size: 15px; font-weight: 700; }
+#records a { font-weight: 700; }
+#records p { font-size: 12px; font-variant-numeric: tabular-nums; }
+.home aside > section { border-top: 1px solid var(--line); }
+footer { border-top: 1px solid var(--line); color: var(--dim); }
+footer > p { font-family: "Gosu Counter", "Gosu UI", sans-serif; font-weight: 700; }
+code { color: var(--accent); }
+.about h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+.about h2 { margin-top: 32px; }
+.about li::marker { color: var(--accent); }

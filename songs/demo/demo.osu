@@ -1,0 +1,42 @@
+osu file format v14
+
+[General]
+AudioFilename: tone.wav
+Mode: 3
+PreviewTime: 1000
+
+[Metadata]
+Title: Gosu Format Demo
+Artist: ggosu
+Creator: ggosu
+Version: Basic
+
+[Difficulty]
+CircleSize: 4
+OverallDifficulty: 3
+
+[Events]
+0,0,"background.png",0,0
+Sprite,Background,Centre,"sprite.png",320,240
+ F,0,0,7000,0.3,0.8
+ M,0,0,7000,120,240,520,240
+ S,0,0,7000,0.4,1
+
+[TimingPoints]
+0,500,4,1,0,70,1,0
+3000,-50,4,1,0,70,0,1
+5000,400,4,1,0,70,1,0
+
+[HitObjects]
+64,192,1000,1,0,0:0:0:70:tap.wav
+192,192,1500,1,0,0:0:0:70:tap.wav
+320,192,2000,1,0,0:0:0:70:tap.wav
+448,192,2500,1,0,0:0:0:70:tap.wav
+64,192,3000,128,0,4500:0:0:0:70:tap.wav
+448,192,3000,128,0,4500:0:0:0:70:tap.wav
+192,192,3500,1,0,0:0:0:70:tap.wav
+320,192,4000,1,0,0:0:0:70:tap.wav
+64,192,5000,1,0,0:0:0:70:tap.wav
+192,192,5400,1,0,0:0:0:70:tap.wav
+320,192,5800,1,0,0:0:0:70:tap.wav
+448,192,6200,1,0,0:0:0:70:tap.wav

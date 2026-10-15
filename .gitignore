@@ -1,0 +1,20 @@
+/.cache/
+/artifacts/
+/build/bin/
+/build/poc/
+/build/web/
+/data/
+/scenes/wailsjs/
+*.exe
+
+# Keep the original demo fixtures; local song libraries are not source files.
+/songs/*
+!/songs/demo/
+
+__pycache__/
+*.pyc
+# Local design documents and references.
+/docs/design/
+
+# Classic skin preview: redistribution rights need review.
+/scenes/settings/skins/classic.png

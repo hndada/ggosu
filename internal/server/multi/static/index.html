@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gosu 멀티플레이 서버 테스트</title>
+<link rel="stylesheet" href="/lobby/chat.css">
+<link rel="stylesheet" href="/theme.css">
+<body>
+<h1>멀티플레이 서버 테스트</h1>
+<p>두 창에서 접속해 방 생성 → 참가 → 채보 선택 → 모두 준비 → 시작을 확인합니다.
+이 화면은 서버 프로토콜 테스트용이며 실제 게임을 실행하지 않습니다. 점수는 테스트 시뮬레이션 값입니다.</p>
+<p><label>닉네임 <input id="name" maxlength="32" value="Player"></label>
+<button id="connect">접속</button> <button id="disconnect" disabled>연결 종료</button>
+<output id="connection">연결 안 됨</output></p>
+<p><label>방 이름 <input id="room-name" maxlength="80" value="연습방"></label>
+<label>인원 <input id="capacity" type="number" min="2" max="8" value="4"></label>
+<button id="create" disabled>방 만들기</button> <button id="refresh" disabled>방 목록</button></p>
+<p><label>생성 비밀번호 (선택) <input id="create-password" type="password" maxlength="64" autocomplete="new-password" placeholder="비워 두면 공개 방"></label></p>
+<ul id="rooms"></ul>
+<p><label>방 ID <input id="room-id" maxlength="32"></label>
+<button id="join" disabled>참가</button> <button id="leave" disabled>나가기</button></p>
+<p><label>입장 비밀번호 <input id="join-password" type="password" maxlength="64" autocomplete="off"></label></p>
+<section>
+<h2>선택 채보 (방장)</h2>
+<p><label>제목 <input id="title" value="서버 테스트 채보"></label>
+<label>SHA-256 <input id="hash" size="66" maxlength="64" value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"></label></p>
+<p><label>키 수 <input id="lanes" type="number" min="1" max="18" value="4"></label>
+<label>길이(초) <input id="duration" type="number" min="1" max="1800" value="10"></label>
+<label>판정 수 <input id="judgements" type="number" min="1" max="1000000" value="10"></label>
+<button id="select" disabled>채보 선택</button></p>
+<p><label>로드한 채보 SHA-256 <input id="loaded-hash" size="66" maxlength="64"></label>
+<button id="ready" disabled>준비</button> <button id="unready" disabled>준비 해제</button>
+<button id="start" disabled>시작 (방장)</button> <button id="reset" disabled>대기실로 (방장)</button></p>
+<p><button id="simulate" disabled>테스트 점수 전송 시작</button>
+<button id="abort" disabled>플레이 포기</button></p>
+<output id="clock">서버 시각 측정 전</output>
+<p id="summary">방에 참가하세요.</p>
+<table><thead><tr><th>참가자</th><th>준비</th><th>진행</th><th>점수</th><th>기준 시각(초)</th><th>같은 시각의 내 점수 차이</th></tr></thead><tbody id="members"></tbody></table>
+<details><summary>서버 상태 JSON</summary>
+<pre id="state">방에 참가하세요.</pre>
+</details>
+</section>
+<h2>메시지</h2>
+<pre id="log"></pre>
+<script type="module" src="/client.js"></script>
+</body>
+</html>

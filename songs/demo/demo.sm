@@ -1,0 +1,44 @@
+#TITLE:Gosu StepMania Demo;
+#ARTIST:ggosu;
+#MUSIC:tone.wav;
+#BACKGROUND:background.png;
+#OFFSET:0;
+#BPMS:0=120,4=180;
+#STOPS:8=0.5;
+#NOTES:
+ dance-single:
+ ggosu:
+ Easy:
+ 3:
+ 0,0,0,0,0:
+0000
+2000
+0100
+3000
+,
+0010
+0001
+1000
+0100
+,
+0000
+0010
+0001
+0000
+;
+#NOTES:
+ kb7-single:
+ ggosu:
+ Hard:
+ 5:
+ 0,0,0,0,0:
+0000000
+2000000
+0010100
+3000000
+,
+0001000
+0100010
+1000001
+0001000
+;

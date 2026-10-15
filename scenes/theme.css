@@ -1,0 +1,437 @@
+/* 바탕: 거의 검정, 강조: 앰버. 색은 이 :root 변수로만 정한다. */
+@font-face { font-family: "Gosu UI"; src: url("/ui/fonts/gmarketmedium.woff2") format("woff2"); font-weight: 400 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Gosu UI"; src: url("/ui/fonts/gmarketbold.woff2") format("woff2"); font-weight: 600 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Gosu Counter"; src: url("/ui/fonts/counter.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+/* Scrollable content keeps wheel/keyboard navigation without visible scrollbar tracks or thumbs. */
+* { scrollbar-width: none !important; }
+*::-webkit-scrollbar { display: none !important; }
+:root { color-scheme: dark; --feel: #ffffff; --popup-dim: rgba(0, 0, 0, 0.5); --bg: #0d0d0e; --text: #ececec; --dim: #8a8a8a; --line: #2a2a2d; --field: #18181a; --button: #394446; --button-light: #5c6c70; --accent: #00add8; --on-accent: #0d0d0e; --accent-tint: #0a1f26; --hero: #141416; --search: #2c2c31; --scrim: rgba(13, 13, 14, 0.62); --lamp-100: #ffb000; --lamp-100-core: #fff4cf; --lamp-fc: #ffffff; --lamp-fc-glow: #09fafd; --lamp-shine: #ffffff; --lamp-clear: #7a7a7a; --lamp-gauge1: #4cd964; --lamp-gauge1-core: #82e493; --lamp-gauge2: #3d6bff; --lamp-gauge2-core: #9eb5ff; --lamp-gauge3: #b45cff; --lamp-gauge3-core: #e9ceff; --activation: #70858c; --pulse-peak: color-mix(in srgb, var(--accent) 20%, var(--accent-tint)); --pulse-rest: color-mix(in srgb, var(--accent) 10%, var(--accent-tint)); --pulse-peak-song: color-mix(in srgb, var(--accent) 20%, transparent); --pulse-rest-song: color-mix(in srgb, var(--accent) 10%, transparent);--toast: var(--button); --toast-hover: #455154; --toast-icon: #22292a; --toast-glyph: #ffffff; --toast-check: #8f9fa3; --toast-check-hover: #ffffff; --toast-close-hover: rgba(0, 0, 0, 0.15); --toast-flash: #ffffff; --cursor-body: #ffffff; --cursor-edge: #0d0d0e;  --chat-bg: rgba(0, 0, 0, 0.8); --chat-alt: rgba(59, 50, 52, 0.2); --chat-name-0: #588c7e; --chat-name-1: #b2a367; --chat-name-2: #c98f65; --chat-name-3: #bc5151; --chat-name-4: #5c8bd6; --chat-name-5: #7f6ab7; --chat-name-6: #a368ad; --chat-name-7: #aa6880; --chat-name-8: #6fad9b; --chat-name-9: #f2e394; --chat-name-10: #f2ae72; --chat-name-11: #f98f8a; --chat-name-12: #7daef4; --chat-name-13: #a691f2; --chat-name-14: #c894d3; --chat-name-15: #d895b0; --chat-name-16: #53c4a1; --chat-name-17: #eace5c; --chat-name-18: #ea8c47; --chat-name-19: #fc4f4f; --chat-name-20: #3d94ea; --chat-name-21: #7760ea; --chat-name-22: #af52c6; --chat-name-23: #e25696; --chat-name-24: #677c66; --chat-name-25: #9b8732; --chat-name-26: #8c5129; --chat-name-27: #8c3030; --chat-name-28: #1f5d91; --chat-name-29: #4335a5; --chat-name-30: #812a96; --chat-name-31: #992861; }
+body, dialog { background: var(--bg); color: var(--text); font-family: "Gosu UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; font-size: 15px; line-height: 1.5; }
+input, select, textarea { font-family: inherit; font-size: inherit; }
+#title-menu button, .hints button, #downloads > header, #selected-heading, .chart-title { font-weight: 700; }
+#preferences, #display-settings, #audio-settings, #offsets, .room-chat-log, #result-run { font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+#result-accuracy, #result-combo, .result-grade > dd:not(.result-track) { font-family: "Gosu Counter", sans-serif; font-weight: 700; font-variant-numeric: tabular-nums; }
+.room-chat-panel { background: var(--chat-bg); color: var(--text); border-left: 1px solid var(--line); }
+.room-chat-head { border-bottom: 1px solid var(--line); }
+.room-chat-head h2 { font-size: 16px; }
+.room-chat-close, .room-chat-settings { font-size: 12px; background: transparent; color: var(--dim); border: 0; }
+.room-chat-ticker, .room-chat-popup { background: var(--chat-bg); color: var(--text); border: 1px solid var(--line); font-size: 13px; line-height: 1.6; }
+.room-chat-popup { border-left: 3px solid var(--accent); }
+.room-chat-resize { cursor: ew-resize; }
+.room-chat-resize:focus-visible, .room-chat-resize:hover { background: var(--accent); outline: 0; }
+.room-chat-compose { border-top: 1px solid var(--line); }
+.room-chat-hint, .room-chat-count, .room-chat-empty { font-size: 12px; color: var(--dim); }
+.room-chat-message { line-height: 1.6; }
+.room-chat-compose textarea { font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; font-size: 13px; line-height: 1.6; }
+.room-chat-message[data-self="true"] .room-chat-name { color: var(--accent); }
+/* osu!lazer ChatLine: 13 px, alternate rows tinted, names in one of 32 sender colours. */
+.room-chat-message { font-size: 13px; }
+.room-chat-message:nth-child(even) { background: var(--chat-alt); }
+.room-chat-time { color: var(--dim); font-weight: 600; font-variant-numeric: tabular-nums; }
+.room-chat-name { font-weight: 700; }
+.room-chat-name[data-colour="0"] { color: var(--chat-name-0); }
+.room-chat-name[data-colour="1"] { color: var(--chat-name-1); }
+.room-chat-name[data-colour="2"] { color: var(--chat-name-2); }
+.room-chat-name[data-colour="3"] { color: var(--chat-name-3); }
+.room-chat-name[data-colour="4"] { color: var(--chat-name-4); }
+.room-chat-name[data-colour="5"] { color: var(--chat-name-5); }
+.room-chat-name[data-colour="6"] { color: var(--chat-name-6); }
+.room-chat-name[data-colour="7"] { color: var(--chat-name-7); }
+.room-chat-name[data-colour="8"] { color: var(--chat-name-8); }
+.room-chat-name[data-colour="9"] { color: var(--chat-name-9); }
+.room-chat-name[data-colour="10"] { color: var(--chat-name-10); }
+.room-chat-name[data-colour="11"] { color: var(--chat-name-11); }
+.room-chat-name[data-colour="12"] { color: var(--chat-name-12); }
+.room-chat-name[data-colour="13"] { color: var(--chat-name-13); }
+.room-chat-name[data-colour="14"] { color: var(--chat-name-14); }
+.room-chat-name[data-colour="15"] { color: var(--chat-name-15); }
+.room-chat-name[data-colour="16"] { color: var(--chat-name-16); }
+.room-chat-name[data-colour="17"] { color: var(--chat-name-17); }
+.room-chat-name[data-colour="18"] { color: var(--chat-name-18); }
+.room-chat-name[data-colour="19"] { color: var(--chat-name-19); }
+.room-chat-name[data-colour="20"] { color: var(--chat-name-20); }
+.room-chat-name[data-colour="21"] { color: var(--chat-name-21); }
+.room-chat-name[data-colour="22"] { color: var(--chat-name-22); }
+.room-chat-name[data-colour="23"] { color: var(--chat-name-23); }
+.room-chat-name[data-colour="24"] { color: var(--chat-name-24); }
+.room-chat-name[data-colour="25"] { color: var(--chat-name-25); }
+.room-chat-name[data-colour="26"] { color: var(--chat-name-26); }
+.room-chat-name[data-colour="27"] { color: var(--chat-name-27); }
+.room-chat-name[data-colour="28"] { color: var(--chat-name-28); }
+.room-chat-name[data-colour="29"] { color: var(--chat-name-29); }
+.room-chat-name[data-colour="30"] { color: var(--chat-name-30); }
+.room-chat-name[data-colour="31"] { color: var(--chat-name-31); }
+.room-chat-compose textarea { background: var(--field); color: var(--text); border: 1px solid var(--line); }
+.room-chat-meta, .room-chat-status, .room-chat-context { color: var(--dim); }
+.room-chat-new { color: var(--accent); }
+input, select { background: var(--field); color: var(--text); border: 1px solid var(--line); }
+#medley h3 { font-size: 17px; }
+#medley-count, #medley-page, .medley-help { color: var(--dim); }
+.medley-help { font-size: 12px; }
+.medley-picked-name { font-size: 17px; font-weight: 700; }
+.medley-picked-chart { color: var(--dim); font-size: 12px; }
+#medley-songs li { border-left: 4px solid var(--accent); background: var(--pulse-rest); }
+.medley-mark { color: var(--accent); font-size: 17px; }
+#medley-candidates li[aria-disabled="true"] { opacity: 0.4; }
+#medley-candidates li:focus-visible, #medley-songs li:focus-visible { outline: 1px solid var(--accent); }
+#medley-search { background: var(--search); border: 2px solid var(--dim); font-size: 17px; }
+#medley-search:focus { border-color: var(--accent); }
+/* Decision 30 → osu!lazer ShearedButton: Background3 fill (hue of the accent, saturation 0.1, lightness 0.25), a 2px
+   border fading from that fill to Background1 (lightness 0.4) at the bottom, TorusAlternate 17 → 17px. */
+button { background: var(--button); color: var(--text); border: 1px solid var(--button); border-bottom: 1px solid var(--button-light); font-family: inherit; font-size: 17px; }
+/* The search box gets its own lighter fill so it reads as a field over the chart background. */
+/* osu!lazer's search box lights its border in the highlight colour while it has focus. */
+#search-text { background: var(--search); border: 2px solid var(--dim); font-size: 17px; }
+#search-text:focus { border-color: var(--accent); }
+fieldset { border: 1px solid var(--line); }
+legend, #list-status, #difficulty, dt, .hints kbd, #song-list li > span:last-child { color: var(--dim); }
+#catalog-loading strong { color: var(--accent); font-size: 24px; }
+#catalog-loading span { color: var(--dim); }
+#edit-field, #edit-map { background: var(--field); border: 1px solid var(--line); }
+#edit-inspector, #edit-charts { border-right: 1px solid var(--line); }
+#edit-message, #edit-saved, #edit-audio-status { color: var(--dim); }
+#edit-charts button[aria-current="true"], #edit-toolbar button[aria-pressed="true"] { border-color: var(--text); }
+button[aria-pressed="true"], #settings-tabs button[aria-selected="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+/* Range windows over the level and length distributions. */
+.range-bar { background: var(--line); }
+.range-bar.in { background: var(--accent); }
+.range-window { background: var(--accent-tint); border-left: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+.range-axis, .range-value { color: var(--dim); }
+/* Settings sliders: osu!lazer ShearedSliderBar, shear 0.2, the nub glides 250ms OutQuint; disabled at 0.3 like lazer. */
+.slider { transform: skewX(-11.3deg); }
+.slider input { opacity: 0; }
+#rate-presets button { transform: translateX(-50%); font-weight: 700; background: transparent; color: var(--text); border: 0; }
+#rate-presets button.feel-press { transform: translateX(-50%) scale(0.9); }
+#rate-presets .feel-label, #rate-controls .slider { transform: none; }
+#rate-presets button[aria-pressed="true"] { color: var(--accent); }
+#rate-presets button:hover { color: var(--accent); }
+#rate-presets button:focus-visible { outline: 0; color: var(--accent); }
+#rate-custom { background: transparent; border: 0; color: var(--dim); transform: none; font-size: 13px; }
+#rate-custom .feel-label { transform: none; }
+#rate-custom[aria-pressed="true"], #rate-custom:hover { color: var(--text); }
+#rate-custom-state { font-weight: 700; font-variant-numeric: tabular-nums; }
+#rate-custom[aria-pressed="true"] #rate-custom-state { color: var(--accent); }
+#rate-custom:focus-visible { outline: 0; color: var(--accent); }
+#time-rate { background: transparent; border: 0; color: var(--accent); font-size: 18px; font-family: ui-monospace, Consolas, monospace; font-weight: 700; }
+#time-rate:focus { outline: 0; }
+#rate-value, #rate-input { color: var(--accent); font-size: 18px; font-family: ui-monospace, Consolas, monospace; font-weight: 700; }
+.slider-fill { background: var(--accent); }
+.slider-rest { background: var(--line); }
+.slider-nub { background: var(--text); border: 3px solid var(--accent); }
+.slider:focus-within .slider-nub { border-color: var(--text); background: var(--accent); }
+.slider:has(input:disabled) { opacity: 0.3; }
+.slider-fill, .slider-rest, .slider-nub { transition: left 250ms cubic-bezier(0.23, 1, 0.32, 1), width 250ms cubic-bezier(0.23, 1, 0.32, 1); }
+/* Every row reserves the bar width so selecting a row does not shift its text. */
+.song-catalog li { border-left: 4px solid transparent; }
+/* osu!lazer Panel: unselected rows sit further right (updateXOffset) - a chart 50 px, a closed song 100 px, and
+   25 px more for every row but the selected one - and move over 400 ms OutQuint. The selection layer fades in
+   over 100 ms and out over 200 ms OutQuint; it pulses with the song (songselect/pulse.js). Gradients are not
+   allowed, so its flat --pulse-* colours carry the average of lazer's 0-50% accent gradient. */
+.song-catalog li { margin-left: 75px; transition: margin-left 400ms cubic-bezier(0.23, 1, 0.32, 1), background 200ms cubic-bezier(0.23, 1, 0.32, 1); }
+#song-list li[aria-expanded="false"] { margin-left: 125px; }
+#song-list li[aria-expanded="true"], #song-list li[role="presentation"]:not(.more) { margin-left: 25px; }
+#song-list li[aria-expanded="true"] { background: var(--pulse-rest-song); transition: margin-left 400ms cubic-bezier(0.23, 1, 0.32, 1), background 100ms cubic-bezier(0.23, 1, 0.32, 1); }
+.song-catalog li[aria-selected="true"] { margin-left: 0; background: var(--pulse-rest); border-left: 4px solid var(--accent); transition: margin-left 400ms cubic-bezier(0.23, 1, 0.32, 1), background 100ms cubic-bezier(0.23, 1, 0.32, 1); }
+/* Adjacent, uninterrupted light bars with achievement flashes. */
+.chart-level { color: var(--accent); font-family: ui-monospace, Consolas, monospace; font-size: 22px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.source-level { color: var(--dim); font-family: ui-monospace, Consolas, monospace; font-size: 17px; font-variant-numeric: tabular-nums; }
+#source-level { font-size: 22px; }
+.chart-points { font-variant-numeric: tabular-nums; }
+.chart-lamp { color: var(--dim); background: var(--line); }
+.chart-lamp:not([data-state="none"]):not([data-state="unavailable"]) { background: currentColor; }
+/* Clear lamp: each step up gets a brighter centre core and a wider glow; perfect shines most. Clear is a flat grey bar. */
+.combo-lamp[data-state="clear"] { color: var(--lamp-clear); }
+.combo-lamp[data-state="gauge1"] {
+    color: var(--lamp-gauge1); background: linear-gradient(currentColor, var(--lamp-gauge1-core) 50%, currentColor);
+    box-shadow: 0 0 2px currentColor, 0 0 3px currentColor;
+}
+.combo-lamp[data-state="gauge2"] {
+    color: var(--lamp-gauge2); background: linear-gradient(currentColor, var(--lamp-gauge2-core) 50%, currentColor);
+    box-shadow: 0 0 3px currentColor, 0 0 6px currentColor;
+}
+.combo-lamp[data-state="gauge3"] {
+    color: var(--lamp-gauge3); background: linear-gradient(currentColor, var(--lamp-gauge3-core) 50%, currentColor);
+    box-shadow: 0 0 4px currentColor, 0 0 8px currentColor;
+}
+.combo-lamp[data-state="fullcombo"] { color: var(--lamp-fc); box-shadow: 0 0 4px var(--lamp-fc-glow), 0 0 7px var(--lamp-fc-glow), 0 0 11px var(--lamp-fc-glow); }
+.combo-lamp[data-state="perfect"] {
+    color: var(--lamp-100); background: linear-gradient(currentColor, var(--lamp-100-core) 50%, currentColor);
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 16px currentColor;
+}
+/* Full combo and perfect: a glow flash and a white shine down the bar, timed to the song by songselect/pulse.js.
+   Full combo glows cyan (beatoraja lamp.png FULL COMBO frame). */
+.combo-lamp .lamp-flash, .combo-lamp .lamp-shine { opacity: 0; }
+.combo-lamp[data-state="fullcombo"] .lamp-flash { box-shadow: 0 0 6px var(--lamp-fc-glow), 0 0 14px var(--lamp-fc-glow), 0 0 26px var(--lamp-fc-glow); }
+.combo-lamp[data-state="perfect"] .lamp-flash { box-shadow: 0 0 6px currentColor, 0 0 14px currentColor, 0 0 26px currentColor; }
+.combo-lamp .lamp-shine { background: linear-gradient(transparent, var(--lamp-shine), transparent); }
+/* Key binding is a keyboard stage: outer white keys, inner light-teal keys, a mint centre key (kept off --accent so a held centre still shows). */
+:root { --key-white: #e9e8e8; --key-pink: #8fd9ec; --key-special: #4cd9a8; }
+.key-lane { background: transparent; border: 0; transform: none; }
+.key-lane:hover, .key-lane:active { background: transparent; transform: none; }
+.key-lane:focus-visible { outline: 2px solid var(--accent); }
+.key-track { background: var(--key-white); border: 2px solid var(--key-white); border-bottom: 5px solid var(--dim); }
+.key-lane[data-tone="pink"] .key-track { background: var(--key-pink); border-color: var(--key-pink); }
+.key-lane[data-tone="special"] .key-track { background: var(--key-special); border-color: var(--key-special); }
+.key-name { color: var(--on-accent); font-size: clamp(11px, 2vw, 18px); font-weight: 700; }
+.key-number { color: var(--dim); font-size: 12px; }
+.key-arrow { color: var(--accent); font-size: 40px; line-height: 1; opacity: 0; }
+.key-lane[aria-current="true"] .key-arrow { opacity: 1; }
+.key-lane:hover .key-track, .key-lane[aria-current="true"] .key-track { border-color: var(--accent); }
+.key-lane[data-held] .key-track { background: var(--accent); border-color: var(--accent); }
+.key-lane[aria-invalid="true"] .key-track { border-color: var(--text); border-style: dashed; }
+.key-note { background: var(--on-accent); }
+#key-chord { color: var(--dim); }
+/* Title: big name and large menu buttons. */
+/* osu!lazer OsuLogo: hover 1.1 over 500 ms OutElastic, press 0.9 over 1000 ms Out, release 500 ms
+   OutElastic, click flash 0.4 fading over 1500 ms OutExpo. */
+#title-logo { transition: transform 500ms linear(0, 0.272 2.5%, 0.646 5%, 1 7.5%, 1.25 10%, 1.364 12.5%, 1.354 15%, 1.257 17.5%, 1.125 20%, 1 22.5%, 0.912 25%, 0.871 27.5%, 0.875 30%, 0.909 32.5%, 0.956 35%, 1 37.5%, 1.031 40%, 1.046 42.5%, 1.044 45%, 1.032 47.5%, 1.016 50%, 1 52.5%, 0.989 55%, 0.984 57.5%, 0.984 60%, 0.989 62.5%, 0.994 65%, 1 67.5%, 1.004 70%, 1.006 72.5%, 1.006 75%, 1.004 77.5%, 1.002 80%, 1 82.5%, 0.998 87.5%, 0.998 90%, 1 97.5%, 1); }
+#title-logo.hovered { transform: scale(1.1); }
+#title-logo svg { transition: transform 500ms linear(0, 0.272 2.5%, 0.646 5%, 1 7.5%, 1.25 10%, 1.364 12.5%, 1.354 15%, 1.257 17.5%, 1.125 20%, 1 22.5%, 0.912 25%, 0.871 27.5%, 0.875 30%, 0.909 32.5%, 0.956 35%, 1 37.5%, 1.031 40%, 1.046 42.5%, 1.044 45%, 1.032 47.5%, 1.016 50%, 1 52.5%, 0.989 55%, 0.984 57.5%, 0.984 60%, 0.989 62.5%, 0.994 65%, 1 67.5%, 1.004 70%, 1.006 72.5%, 1.006 75%, 1.004 77.5%, 1.002 80%, 1 82.5%, 0.998 87.5%, 0.998 90%, 1 97.5%, 1); }
+#title-logo.pressed svg { transform: scale(0.9); transition: transform 1000ms cubic-bezier(0.5, 1, 0.89, 1); }
+#title-flash { opacity: 0; transition: opacity 1500ms cubic-bezier(0.16, 1, 0.3, 1); }
+#title-flash.lit { opacity: 0.4; transition: none; }
+/* osu!lazer SettingsPanel: in from the left over 600 ms OutQuint while fading over 300 ms OutQuint; out the same way. */
+#settings { transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1); }
+#settings.away { transform: translateX(calc(-50vw - 50%)); opacity: 0; }
+#title-name { font-family: "Gosu Counter", "Gosu UI", sans-serif; font-size: 48px; font-weight: 700; letter-spacing: -0.03em; }
+#title-web { background: transparent; border: 0; color: var(--text); font-size: 13px; line-height: 1.2; opacity: 0.8; }
+#title-web:hover, #title-web:focus-visible { opacity: 1; }
+#title-web:focus-visible { outline: 2px solid var(--accent); }
+#title-web .title-brand { font-family: "Gosu Counter", "Gosu UI", sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.logo-disc { color: var(--line); }
+.logo-ring { color: var(--accent); }
+.logo-notes { color: var(--text); }
+#title-menu button { font-size: 1.4em; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1), background 250ms cubic-bezier(0.23, 1, 0.32, 1); }
+/* The chosen item slides 28px out of the arc. */
+#title-menu button:focus { background: var(--accent); color: var(--on-accent); border-color: var(--accent); transform: translateX(28px); }
+#title-time { color: var(--dim); font-variant-numeric: tabular-nums; }
+#title-progress { background: var(--line); }
+#title-progress span { background: var(--accent); }
+/* Volume overlay: 100ms fade, selected meter grows to 1.04 over 500ms (OutExpo), master in the accent. */
+#volume { background: var(--scrim); opacity: 0; transition: opacity 100ms linear; }
+#volume[data-shown] { opacity: 1; }
+.volume-meter { transform: scale(1); transition: transform 500ms cubic-bezier(0.19, 1, 0.22, 1); }
+.volume-meter[data-selected] { transform: scale(1.04); }
+.volume-track { color: var(--line); }
+.volume-fill { color: var(--text); }
+.volume-meter[data-volume="master"] .volume-fill { color: var(--accent); }
+.volume-value { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.volume-name { background: var(--field); color: var(--dim); font-size: 12px; font-weight: 700; }
+.volume-meter[data-selected] .volume-name { background: var(--accent-tint); color: var(--text); }
+/* Sort window: the opener and its choices are large targets. */
+.hints button { font-size: 15px; font-weight: 700; line-height: 1.2; border: 0; background: var(--field); }
+.hints button + button { border-left: 1px solid var(--line); }
+.hints button:hover, .hints button:focus-visible { background: var(--accent-tint); }
+.hints button:active { background: var(--accent); color: var(--on-accent); }
+.hints button:active kbd { color: var(--on-accent); }
+.hints kbd { font-family: inherit; font-size: 11px; font-weight: 400; }
+#mod-summary { font-size: 13px; font-weight: 700; color: var(--accent); }
+#notices > p { background: var(--chat-bg); color: var(--text); font-size: 14px; }
+#player { font-size: 15px; line-height: 1.2; }
+#player > span, #player > feel-label > span { font-size: 12px; color: var(--dim); }
+#player > span b, #player > feel-label > span b { color: var(--text); }
+#sort-options button { font-size: 1.1em; }
+#key-pad { background: var(--field); border: 1px solid var(--line); }
+#key-pad:focus { border-color: var(--accent); }
+#multi-panel { background: var(--field); color: var(--text); border: 1px solid var(--line); }
+/* Detail hero: the chart background fills it; level, chart name and title sit on a dark band at its foot. */
+/* Pictures crossfade at full strength inside #backdrop, which alone sets the dim (osu!lazer dims the
+   whole background stack), so two overlapping pictures never add up to a brighter screen. */
+#bg { opacity: 0; transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+#bg-old { opacity: 1; }
+#bg-old.gone { opacity: 0; transition: opacity 0.25s linear; }
+#bg.shown { opacity: 1; }
+/* The same brightness as the game: the background dim setting (data-dim, default 75%). */
+#backdrop { opacity: calc(1 - attr(data-dim type(<number>), 75) / 100); transition: opacity 500ms cubic-bezier(0.61, 1, 0.88, 1); }
+#backdrop.instant { transition: none; }
+/* Tab reveals the artwork at full brightness and clears menus and overlays. */
+body.background-view #app > :not(#backdrop) { opacity: 0; }
+body.background-view #backdrop { opacity: 1; }
+#bg.instant { transition: none; }
+/* osu!lazer MainMenu: with the menu buttons open the background sits at Gray(0.8), faded over 500 ms OutSine. */
+#title:not([hidden]) ~ #backdrop { opacity: 0.8; }
+/* Starting a chart (osu!lazer): the row flashes white 40% and clears over 1000 ms OutQuint, song select
+   fades out over 300 ms OutQuint, the background brightens over 800 ms OutQuint and the chart card
+   grows from 0.7 over 650 ms OutQuint while fading in over 500 ms. */
+#song-list li.activated { background: var(--activation); transition: none; }
+#song-list li.released { transition: background 1000ms cubic-bezier(0.23, 1, 0.32, 1), border-color 0.12s ease-out, margin-left 400ms cubic-bezier(0.23, 1, 0.32, 1); }
+#songselect { transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1); }
+#songselect.leaving { opacity: 0; }
+/* osu!lazer SongSelect wedges (updateWedgeVisibility): arriving, the title and details wedges slide in from
+   150 px left and the filter from 150 px right over 600 ms OutQuint, fading in over 200 ms Easing.In; starting a
+   chart sends them back the same way. */
+#detail, #list-head { transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms cubic-bezier(0.11, 0, 0.5, 0); }
+#songselect.entering #detail, #songselect.leaving #detail { transform: translateX(-150px); opacity: 0; }
+#songselect.entering #list-head, #songselect.leaving #list-head { transform: translateX(150px); opacity: 0; }
+#songselect.entering #detail, #songselect.entering #list-head { transition: none; }
+#backdrop.loading { opacity: 1; transition: opacity 800ms cubic-bezier(0.23, 1, 0.32, 1); }
+#loader { background: var(--field); border: 1px solid var(--line); opacity: 0; transform: scale(0.7); }
+#loader.shown { opacity: 1; transform: none; transition: transform 650ms cubic-bezier(0.23, 1, 0.32, 1), opacity 500ms cubic-bezier(0.23, 1, 0.32, 1); }
+#loader-title { font-size: 20px; font-weight: 700; }
+#loader-artist, #loader-chart { color: var(--dim); }
+/* Results (osu!lazer ResultsScreen): the screen comes in over 250 ms while the background dims to half. */
+#result { transition: opacity 250ms linear; }
+#hud-preview { background: var(--field); }
+#hud-preview iframe { border: 0; }
+.hud-preview-page { background: var(--field); }
+#preview-error { color: var(--text); font-size: 14px; }
+#hud-layout-status { color: var(--dim); font-size: 12px; }
+#result.entering { opacity: 0; transition: none; }
+#backdrop.result-dim { opacity: 0.125; transition: opacity 250ms linear; }
+/* Results use the same flat surfaces and cyan accent as song select. */
+:root { --result-kool: #54dded; --result-cool: #a691f2; --result-good: #eace5c; --result-miss: #f98f8a; --result-fast: #75b2f2; --result-slow: #f2c15f; }
+#result { background: var(--scrim); font-family: "Gosu UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+#result-head { border-bottom: 1px solid var(--line); }
+#result-heading { color: var(--dim); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; }
+#result-heading:focus { outline: none; }
+#result-song { font-size: clamp(28px, 3vw, 40px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+#result-chart-name { color: var(--text); font-size: 15px; font-weight: 700; }
+#result-keys { color: var(--on-accent); background: var(--accent); font-size: 13px; letter-spacing: 0.04em; }
+#result-difficulty { color: var(--accent); letter-spacing: 0.06em; }
+#result-flags { color: var(--dim); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+#result-state { color: var(--accent); font-family: "Gosu Counter", sans-serif; font-size: clamp(32px, 4vw, 48px); font-style: italic; font-weight: 700; letter-spacing: -0.01em; line-height: 1; }
+#result[data-completed="false"] #result-state { color: var(--result-miss); }
+#result-run { color: var(--dim); font-size: 12px; line-height: 1.5; }
+#result-run summary { cursor: pointer; }
+#result-run dd { color: var(--text); }
+#result-calibration { color: var(--dim); font-size: 12px; }
+#result-total dt { font-size: 12px; letter-spacing: 0.06em; }
+#result-total dd { font-size: clamp(24px, 3vw, 36px); font-weight: 700; line-height: 1.4; }
+#result-total #result-points { font-family: "Gosu Counter", sans-serif; font-size: clamp(44px, 5.6vw, 76px); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0; line-height: 1.2; }
+.result-points { border-bottom: 2px solid var(--accent); }
+#result dd { font-variant-numeric: tabular-nums; }
+#result h2 { font-size: 13px; font-weight: 700; }
+#comparison-status { color: var(--dim); font-size: 13px; }
+#comparison-status.improved { color: var(--accent); font-weight: 700; }
+#comparison { font-size: 12px; }
+#comparison #delta-points { font-size: 18px; font-weight: 700; }
+#result-detail { border-left: 1px solid var(--line); }
+.result-grade dt { color: inherit; font-family: "Gosu Counter", sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; }
+.result-grade > dd:not(.result-track) { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.result-grade[data-grade="kool"] { color: var(--result-kool); }
+.result-grade[data-grade="cool"] { color: var(--result-cool); }
+.result-grade[data-grade="good"] { color: var(--result-good); }
+.result-grade[data-grade="miss"] { color: var(--result-miss); }
+#result-timing dt { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+#result-timing dd { font-size: 17px; font-weight: 700; }
+#result-timing [data-timing="fast"] { color: var(--result-fast); }
+#result-timing [data-timing="slow"] { color: var(--result-slow); }
+.result-track { background: var(--line); }
+.result-track span { background: currentColor; }
+#result-foot { border-top: 1px solid var(--line); }
+#result-foot button { font-size: 13px; font-weight: 700; }
+#result-foot #retry { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+#result-foot kbd { color: var(--dim); font-family: inherit; font-size: 11px; }
+#result-saved, #result-warnings { color: var(--result-miss); font-size: 12px; }
+@media (max-width: 760px) {
+    #result-detail { border-left: 0; }
+    #result-foot { background: var(--bg); }
+}
+/* Song select: every info pane sits on the same dim so text reads over the chart background. */
+#top, #detail, #list-pane, #commands, #medley-top, #medley-detail, #medley-list, #medley-commands { background: var(--scrim); }
+#hero-level { color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
+#hero-level span { font-size: 11px; }
+#hero-level b { font-size: 32px; font-weight: 700; }
+#selected-heading { font-size: 22px; line-height: 1.2; }
+#history-status, #preview-status { color: var(--dim); }
+#history li.demo { font-variant-numeric: tabular-nums; }
+#history .demo-rank, #history .demo-accuracy { color: var(--dim); }
+/* osu!lazer Leaderboard placeholder: 22px text; ScaleTo(0.8) then 1 over 900 ms OutQuint, fading in over 300 ms OutQuint. */
+#history-status.placeholder { font-size: 22px; transition: transform 900ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1); }
+#history-status.placeholder.entering { transform: scale(0.8); opacity: 0; transition: none; }
+#preview-status { font-size: 12px; }
+#hero { background: var(--hero); }
+#hero-text { background: var(--scrim); }
+#song-duration { color: var(--dim); font-size: 12px; font-variant-numeric: tabular-nums; }
+#info-density { background: var(--field); }
+#info-density span { background: var(--accent); }
+#chart-menu { border: 1px solid var(--line); }
+#chart-menu-name { color: var(--dim); font-size: 12px; }
+.score-open strong { font-size: 20px; font-variant-numeric: tabular-nums; }
+.score-mods { color: var(--dim); font-size: 12px; }
+#score-tip { background: var(--field); border: 1px solid var(--line); border-left: 2px solid var(--accent); font-variant-numeric: tabular-nums; }
+#score-tip .tip-main { font-size: 14px; font-weight: 700; }
+#score-tip .tip-sub { color: var(--dim); font-size: 12px; }
+#difficulty { color: var(--text); font-size: 15px; }
+#best { color: var(--accent); font-size: 12px; font-variant-numeric: tabular-nums; }
+/* Moving the selection slides the new row in slightly so the cursor reads as motion. */
+.song-catalog li { transition: background 0.12s ease-out, border-color 0.12s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+    #bg, #bg-old.gone, .song-catalog li, #song-list li.released, #songselect, #backdrop, #backdrop.loading, #loader.shown, #result, #backdrop.result-dim, .slider-fill, .slider-rest, .slider-nub, #title-menu button, #title-logo, #title-logo svg, #title-flash, #settings, #history-status.placeholder { transition: none; }
+}
+/* The in-window cursor (cursor.js) replaces the system one. */
+*, *::before, *::after { cursor: none !important; }
+#cursor { background: transparent; border: 0; }
+.cursor-body { color: var(--cursor-body); }
+.cursor-edge { color: var(--cursor-edge); }
+
+/* Decision 28 → osu!lazer ShearedButton (motion/motion.js): sheared by 0.2 (11.31°) with the label upright and a
+   2px border; hover brightens over 150 ms OutQuint (lazer's Lighten(0.2), here a 10% white layer because the
+   theme has no filters); pressing shrinks to 0.9 over 2000 ms OutQuint and release springs back over 1000 ms
+   OutElastic; a click flashes 90% white that clears over 800 ms OutQuint. */
+button.feel { border-width: 2px; transform: skewX(-11.31deg); transition: transform 1000ms linear(0, 0.272 2.5%, 0.646 5%, 1 7.5%, 1.25 10%, 1.364 12.5%, 1.354 15%, 1.257 17.5%, 1.125 20%, 1 22.5%, 0.912 25%, 0.871 27.5%, 0.875 30%, 0.909 32.5%, 0.956 35%, 1 37.5%, 1.031 40%, 1.046 42.5%, 1.044 45%, 1.032 47.5%, 1.016 50%, 1 52.5%, 0.989 55%, 0.984 57.5%, 0.984 60%, 0.989 62.5%, 0.994 65%, 1 67.5%, 1.004 70%, 1.006 72.5%, 1.006 75%, 1.004 77.5%, 1.002 80%, 1 82.5%, 0.998 87.5%, 0.998 90%, 1 97.5%, 1); }
+button.feel.feel-press { transform: skewX(-11.31deg) scale(0.9); transition: transform 2000ms cubic-bezier(0.23, 1, 0.32, 1); }
+.feel-label { transform: skewX(11.31deg); }
+.feel-hover, .feel-flash { background: var(--feel); opacity: 0; }
+.feel-hover { transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1); }
+button.feel-hovered > .feel-hover { opacity: 0.1; }
+.feel-flash { transition: opacity 800ms cubic-bezier(0.23, 1, 0.32, 1); }
+button.feel-flash-on > .feel-flash { opacity: 0.9; transition: none; }
+/* OsuTabControl: the selected tab changes over TRANSITION_LENGTH 500 ms OutQuint. */
+#settings-tabs button:not(.feel-press) { transition: background 500ms cubic-bezier(0.23, 1, 0.32, 1), color 500ms cubic-bezier(0.23, 1, 0.32, 1), border-color 500ms cubic-bezier(0.23, 1, 0.32, 1), transform 1000ms linear(0, 0.272 2.5%, 0.646 5%, 1 7.5%, 1.25 10%, 1.364 12.5%, 1.354 15%, 1.257 17.5%, 1.125 20%, 1 22.5%, 0.912 25%, 0.871 27.5%, 0.875 30%, 0.909 32.5%, 0.956 35%, 1 37.5%, 1.031 40%, 1.046 42.5%, 1.044 45%, 1.032 47.5%, 1.016 50%, 1 52.5%, 0.989 55%, 0.984 57.5%, 0.984 60%, 0.989 62.5%, 0.994 65%, 1 67.5%, 1.004 70%, 1.006 72.5%, 1.006 75%, 1.004 77.5%, 1.002 80%, 1 82.5%, 0.998 87.5%, 0.998 90%, 1 97.5%, 1); }
+/* Decision 29 → osu!lazer screens: a screen fades in over 300 ms OutQuint (SongSelect, MainMenu FADE_IN with
+   the buttons moving back from -800 of 1366); the title leaves over 400 ms InSine, moving its buttons -800. */
+#title, #editor { transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1); }
+#title-menu { transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1); }
+#title.entering, #songselect.entering, #editor.entering { opacity: 0; transition: none; }
+#title.entering #title-menu { transform: translateX(-58.57vw); transition: none; }
+#title.leaving-ghost { transition: opacity 400ms cubic-bezier(0.12, 0, 0.39, 0), transform 400ms cubic-bezier(0.12, 0, 0.39, 0); }
+#title.leaving-ghost.gone { opacity: 0; transform: translateX(-58.57vw); }
+/* PopupDialog: grows from 0.7 over 750 ms OutElasticHalf while fading in over 500 ms OutQuint; the screen
+   behind dims to 50% over 500 ms OutQuint. */
+dialog.popup { transition: transform 750ms linear(0, 0.188 2.5%, 0.388 5%, 0.58 7.5%, 0.75 10%, 0.891 12.5%, 1 15%, 1.077 17.5%, 1.125 20%, 1.149 22.5%, 1.153 25%, 1.144 27.5%, 1.125 30%, 1.102 32.5%, 1.077 35%, 1.053 37.5%, 1.031 40%, 1.014 42.5%, 1 45%, 0.99 47.5%, 0.984 50%, 0.981 52.5%, 0.981 55%, 0.982 57.5%, 0.984 60%, 0.987 62.5%, 0.99 65%, 0.993 67.5%, 0.996 70%, 0.998 72.5%, 1 75%, 1.002 80%, 1.002 90%, 1.001 97.5%, 1), opacity 500ms cubic-bezier(0.23, 1, 0.32, 1); }
+dialog.popup.entering { transform: scale(0.7); opacity: 0; transition: none; }
+dialog.popup::backdrop { background: var(--popup-dim); transition: opacity 500ms cubic-bezier(0.23, 1, 0.32, 1); }
+dialog.popup.entering::backdrop { opacity: 0; transition: none; }
+@media (prefers-reduced-motion: reduce) {
+    button.feel, button.feel.feel-press, .feel-hover, .feel-flash, #settings-tabs button:not(.feel-press), #title, #editor, #title-menu, #title.leaving-ghost, dialog.popup, dialog.popup::backdrop, #song-list li, #detail, #list-head { transition: none; }
+}
+
+#list-position { font-variant-numeric: tabular-nums; }
+.list-track { background: var(--line); }
+#list-range-window { background: var(--accent); }
+
+#playing-status { background: var(--bg); color: var(--text); }
+#playing-chart { color: var(--accent); }
+
+#web-play { background: var(--bg); color: var(--text); }
+
+#web-play iframe { border: 0; }
+
+/* Play-mode controls share the app theme. */
+.play-options { border: 0; }
+.mod-section h3 { font-size: 14px; }
+.mod-section output { color: var(--accent); font-weight: normal; }
+.option-buttons small { font-size: 11px; }
+.mod-buttons strong { font-size: 26px; line-height: 1; }
+.mod-buttons small { font-size: 11px; }
+.mod-state { font-size: 11px; font-weight: bold; }
+.mod-note { color: var(--dim); font-size: 12px; }
+/* Toasts (notification.js): osu!lazer Notification. Background3, Background2 on hover over 200 ms OutQuint; the icon
+   column on Background5; SimpleNotification text 14 px medium; check icon Foreground1, Content1 on hover. */
+#toasts { background: transparent; border: 0; }
+.toast { transition: translate 150ms cubic-bezier(0.25, 1, 0.5, 1), opacity 200ms linear; }
+.toast[data-state="enter"] { opacity: 0; }
+.toast[data-state="forward"] { translate: 400px 0; opacity: 0; transition: translate 600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 600ms cubic-bezier(0.22, 1, 0.36, 1); }
+.toast[data-state="fade"] { opacity: 0; transition: opacity 100ms linear; }
+.toast[data-state="fling"] { transition: none; }
+.toast-main { background: var(--toast); transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.toast[data-state="enter"] .toast-main { transform: translateX(100%); }
+.toast-main:hover { background: var(--toast-hover); }
+.toast-icon { background: var(--toast-icon); color: var(--toast-glyph); }
+.toast-text { color: var(--text); font-size: 14px; font-weight: 500; line-height: 20px; }
+.toast-text > span:last-child { color: var(--toast-check); }
+.toast-close { background: transparent; color: var(--toast-check); border: 0; transition: background-color 200ms cubic-bezier(0.22, 1, 0.36, 1), color 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.toast-close:hover { background: var(--toast-close-hover); color: var(--toast-check-hover); }
+.toast-flash { background: var(--toast-flash); opacity: 0; transition: opacity 2000ms cubic-bezier(0.165, 0.84, 0.44, 1); }
+.toast[data-state="enter"] .toast-flash { opacity: 0.8; transition: none; }

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="gosu에서 채보를 찾고, 웹에서 플레이하고, 나만의 채보를 편집하세요.">
+    <title>gosu — 플레이하고, 만들고, 함께</title>
+    <link rel="stylesheet" href="/theme.css">
+    <link rel="stylesheet" href="/home.css">
+    <script type="module" src="/home.js"></script>
+</head>
+<body>
+    <a href="#main">본문으로 이동</a>
+    <header class="site-header">
+        <a href="/" aria-label="gosu 홈">gosu</a>
+        <nav aria-label="주 메뉴">
+            <a href="/about">소개</a>
+            <a href="#download">다운로드</a>
+            <a href="/play">웹플레이</a>
+            <a href="#charts">채보 검색</a>
+            <a href="/play?edit=1">채보 편집</a>
+            <a href="#community">커뮤니티</a>
+            <a href="#me">내 정보</a>
+        </nav>
+    </header>
+    <main id="main" class="home">
+        <section class="intro" aria-labelledby="intro-heading">
+            <h1 id="intro-heading" class="hidden-label">gosu</h1>
+            <p>건반 리듬 게임</p>
+            <p class="links"><a href="/play">웹에서 플레이</a> <a href="#download">PC 다운로드</a></p>
+        </section>
+        <section id="charts" aria-labelledby="charts-heading">
+            <h2 id="charts-heading">채보 찾기</h2>
+            <form action="/play" method="get" class="search">
+                <label for="q" class="hidden-label">채보 검색어</label>
+                <div><input id="q" name="q" type="search" placeholder="제목·아티스트·제작자·난이도" maxlength="200"><button type="submit">검색</button></div>
+            </form>
+            <div class="list-head">
+                <h3>최근 업데이트 곡</h3>
+                <p>전체 {{.Total}}개 채보</p>
+                <p><a href="/play">모든 채보 보기</a></p>
+            </div>
+            <ul class="charts">
+                {{range .Songs}}
+                {{$first := index .Charts 0}}
+                <li>
+                    <h4><a href="/play?chart={{$first.Path}}">{{if .Title}}{{.Title}}{{else}}제목 없는 곡{{end}}</a></h4>
+                    <p>{{if .Artist}}{{.Artist}}{{else}}아티스트 정보 없음{{end}}</p>
+                    <ul>
+                        {{range .Charts}}
+                        <li><a href="/play?chart={{.Path}}" title="{{.Lanes}}K · {{.Difficulty}} · {{.Format}} · 제작자 {{if .Creator}}{{.Creator}}{{else}}정보 없음{{end}}">{{if .Level}}<b>{{.Level}}</b> {{end}}{{.Lanes}}K {{.Difficulty}}</a></li>
+                        {{end}}
+                    </ul>
+                </li>
+                {{else}}<li>아직 플레이할 채보가 없어요.</li>{{end}}
+            </ul>
+        </section>
+        <aside aria-labelledby="news-heading">
+            <section aria-labelledby="news-heading">
+                <h2 id="news-heading">공지</h2>
+                <p>등록된 공지 없음</p>
+            </section>
+            <section id="me" aria-labelledby="me-heading">
+                <h2 id="me-heading">최근 플레이</h2>
+                <p id="records-status" role="status">기록을 불러오는 중이에요.</p>
+                <ul id="records"></ul>
+                <p><a href="/play#record-tools">기록·리플레이 관리</a></p>
+            </section>
+            <section id="download" aria-labelledby="download-heading">
+                <h2 id="download-heading">다운로드</h2>
+                {{if .Download}}<p><a href="/download/gosu-windows.zip" download>Windows (ZIP)</a> · 개발 빌드</p>
+                {{else}}<p>다운로드 준비 중</p>{{end}}
+                <p><a href="/about#download">설치 안내</a></p>
+            </section>
+            <section id="community" aria-labelledby="community-heading">
+                <h2 id="community-heading">커뮤니티</h2>
+                <p>준비 중</p>
+            </section>
+        </aside>
+    </main>
+    <footer><p>gosu</p><nav aria-label="하단 메뉴"><a href="/about">소개</a><a href="/about#guide">이용 안내</a><a href="#download">다운로드</a><a href="#community">커뮤니티</a></nav></footer>
+</body>
+</html>
